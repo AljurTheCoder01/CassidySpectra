@@ -1,4 +1,5 @@
-// well modify mo nlng liyan if may mali sa pag set ng db or blah blah
+// hahah baliwala mo nlng yang mga line, nasanay kasi ako stsaka copy paste lang ako sa notes ko yang mga lines nayan hahahaha, btw modify mo nlng if may mali sa pag setup
+
 import { format } from "cassidy-styler";
 
 interface Zone {
@@ -51,7 +52,8 @@ interface AdventureData {
 }
 
 interface UserData {
-  balance?: number;
+  money?: number; // Use money to match balance.js
+  name?: string; // Store name for balance.js
   adventure?: AdventureData;
 }
 
@@ -64,7 +66,7 @@ interface UsersDB {
   ) => Promise<Record<string, UserData>>;
 }
 
-
+// Define context interface
 interface CommandContext {
   output: {
     reply: (message: string) => Promise<void>;
@@ -77,7 +79,7 @@ interface CommandContext {
   args: string[];
 }
 
-
+// Define command interface
 interface Command {
   meta: {
     name: string;
@@ -104,7 +106,7 @@ interface Command {
   entry: (ctx: CommandContext) => Promise<void>;
 }
 
-
+// Command definition
 const command: Command = {
   meta: {
     name: "adventure",
@@ -174,7 +176,7 @@ const command: Command = {
       if (Object.keys(existing).length > 0) {
         return await output.reply(
           "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖭𝖺𝗆𝖾 ${name} 𝗂𝗌 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝖺𝗄𝖾𝗇! 𝖢𝗁𝗈𝗈𝗌𝖾 𝖺𝗇𝗈𝗍𝗁𝖾𝗋.\n` +
+          `𝖭𝖺𝗆𝖾 ${name} 𝗂𝗌 𝖺𝗅𝗋𝖾𝖺𝖽𝗒 𝗍𝖺𝗄𝖾𝗇! 𝖢𝗁𝗈𝗈𝗌𝖾 𝖺𝗇𝗈𝗍𝗁𝖾𝗋.\n` +
           "━━━━━━━ ✕ ━━━━━━\n" +
           "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
         );
@@ -182,7 +184,9 @@ const command: Command = {
 
       const newUserData: UserData = {
         ...userData,
+        name, // Set top-level name for balance.js
         adventure: { name, inventory: {}, cooldowns: {} },
+        money: userData?.money || 0, // Initialize money
       };
 
       await usersDB.setItem(userID, newUserData);
@@ -191,9 +195,9 @@ const command: Command = {
         "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
         `𝖱𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝖺𝗌 ${name}!\n` +
         "𝖲𝗍𝖺𝗋𝗍 𝖾𝗑𝗉𝗅𝗈𝗋𝗂𝗇𝗀 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒>\n" +
-        "𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n" +
+        "𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂�<CODE>𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n" +
         "━━━━━━━ ✕ ━━━━━━\n" +
-        "𝗗𝗲𝘃𝗲𝗹𝗼𝗽 𝗯𝘆: Aljur Pogoy"
+        "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
       );
     }
 
@@ -214,7 +218,7 @@ const command: Command = {
       const allUsers = await usersDB.queryItemAll(
         { "value.adventure.name": { $exists: true } },
         "adventure",
-        "balance"
+        "money"
       );
 
       for (const [userId, data] of Object.entries(allUsers)) {
@@ -226,7 +230,7 @@ const command: Command = {
           content += `🌍 『 ${data.adventure.name} 』\n`;
           content += `𝗨𝘀𝗲𝗿 𝗜𝗗: ${userId}\n`;
           content += `𝗜𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆: ${items}\n`;
-          content += `𝗖𝗼𝗶𝗻𝘀: ${data.balance || 0}\n\n`;
+          content += `𝗖𝗼𝗶𝗻𝘀: ${data.money || 0}\n\n`;
         }
       }
 
@@ -253,7 +257,7 @@ const command: Command = {
       });
       content += `> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒> 𝗍𝗈 𝖾𝗑𝗉𝗅𝗈𝗋𝖾\n` +
                  `*𝖤𝗑𝖺𝗆𝗉𝗅𝖾: #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒\n` +
-                 `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗂𝗌𝗍 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌\n` +
+                 `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗶𝘀𝘁 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌\n` +
                  `━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
 
       return await output.reply(content);
@@ -290,7 +294,7 @@ const command: Command = {
 
     newUserData.adventure!.cooldowns = newUserData.adventure!.cooldowns || {};
     newUserData.adventure!.cooldowns[zoneKey] = { lastAdventured: Date.now() };
-    newUserData.balance = (newUserData.balance || 0) + (outcome.rewards.coins || 0);
+    newUserData.money = (newUserData.money || 0) + (outcome.rewards.coins || 0);
 
     if (outcome.rewards.itemKey) {
       newUserData.adventure!.inventory = newUserData.adventure!.inventory || {};
