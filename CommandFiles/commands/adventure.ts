@@ -1,7 +1,7 @@
-// modify moto if may mali sa pag set-up 🙃
+// Modify mo nlng to pag mali yung setup ko, tamad eh
+
 
 import { format } from "cassidy-styler";
-
 
 interface Zone {
   key: string;
@@ -45,7 +45,6 @@ const outcomes: Outcome[] = [
   { type: "riddle", description: "Solved a riddle to unlock a secret stash!", rewards: { coins: 180, itemKey: "silver_coin", quantity: 5 } },
 ];
 
-// ganto nlng ginamit ko hahaa iwan 
 interface AdventureData {
   name?: string;
   inventory: Record<string, { quantity: number }>;
@@ -67,7 +66,6 @@ interface UsersDB {
   ) => Promise<Record<string, UserData>>;
 }
 
-// Define context interface
 interface CommandContext {
   output: {
     reply: (message: string) => Promise<void>;
@@ -79,7 +77,6 @@ interface CommandContext {
   usersDB: UsersDB | null;
   args: string[];
 }
-
 
 interface Command {
   meta: {
@@ -107,7 +104,6 @@ interface Command {
   entry: (ctx: CommandContext) => Promise<void>;
 }
 
-
 const command: Command = {
   meta: {
     name: "adventure",
@@ -121,11 +117,11 @@ const command: Command = {
   style: {
     title: {
       text_font: "bold",
-      content: "〘 🌍 〙 **ADVENTURE**",
+      content: "",
       line_bottom: "default",
     },
     footer: {
-      content: "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+      content: "",
       text_font: "fancy",
     },
     titleFont: "bold",
@@ -139,7 +135,7 @@ const command: Command = {
     if (!usersDB) {
       return await output.reply(
         "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        "𝖨𝗇𝗍𝖾𝗋𝗇𝖺𝗅 𝖾𝗋𝗋𝗈𝗋: 𝖣𝖺𝗍𝖺 𝖼𝖺𝖼𝗁𝖾 𝗇𝗈𝗍 𝗂𝗇𝗂𝗍𝗂𝖺𝗅𝗂𝗓𝖾𝖽. 𝖢𝗈𝗇𝗍𝖺𝖼𝗍 𝖻𝗈�_t 𝖺𝖽𝗆𝗂𝗇.\n" +
+        "𝖨𝗇𝗍𝖾𝗋𝗇𝖺𝗅 𝖾𝗋𝗋𝗈𝗋: 𝖣𝖺𝗍𝖺 𝖼𝖺𝖼𝗁𝖾 𝗇𝗈𝗍 𝗂𝗇𝗂𝗍𝗂𝖺𝗅𝗂𝗓𝖾𝖽. 𝖢𝗈𝗇𝗍𝖺𝖼𝗍 𝖻𝗈𝗍 𝖺𝖽𝗆𝗂𝗇.\n" +
         "━━━━━━━ ✕ ━━━━━━\n" +
         "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
       );
@@ -187,7 +183,7 @@ const command: Command = {
         ...userData,
         name,
         adventure: { name, inventory: {}, cooldowns: {} },
-        money: userData?.money || 0, 
+        money: userData?.money || 0,
       };
 
       await usersDB.setItem(userID, newUserData);
@@ -206,7 +202,7 @@ const command: Command = {
       return await output.reply(
         "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
         "𝖸𝗈𝗎'𝗋𝖾 𝗇𝗈𝗍 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽!\n" +
-        "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 <𝗇𝖺𝗆𝖾>\n" +
+        "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 �_r𝗲𝗀𝗂𝗌𝗍𝖾𝗋 <𝗇𝖺𝗆𝖾>\n" +
         "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 𝖲𝗁𝖺𝖽𝗈𝗐_𝖶𝖺𝗋𝗋𝗂𝗈𝗋\n" +
         "━━━━━━━ ✕ ━━━━━━\n" +
         "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
@@ -236,7 +232,7 @@ const command: Command = {
       }
 
       if (!content.includes("『")) {
-        content += "𝖭𝗈 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌 𝗋𝖾�_g𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝗒𝖾𝗍!\n";
+        content += "𝖭𝗈 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝗒𝖾𝗍!\n";
       }
       content += "━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy";
 
@@ -244,7 +240,7 @@ const command: Command = {
     }
 
     if (!args[0]) {
-      let content = "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
+      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
                     "𝘼𝙙𝙫𝙚𝙣𝙩𝙪𝙧𝙚 𝙕𝙤𝙣𝙚𝙨:\n━━━━━━━━━━━━━━━\n";
       zones.forEach((z) => {
         const lastAdventured = userData.adventure?.cooldowns?.[z.key]?.lastAdventured || 0;
@@ -259,7 +255,7 @@ const command: Command = {
       content += `> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒> 𝗍𝗈 𝖾𝗑𝗉𝗅𝗈𝗋𝖾\n` +
                  `*𝖤𝗑𝖺𝗆𝗉𝗅𝖾: #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒\n` +
                  `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗶𝘀𝘁 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌\n` +
-                 `━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
+                 `━━━━━━━ ✕ ━━━━━━\n�_D𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
 
       return await output.reply(content);
     }
@@ -311,8 +307,8 @@ const command: Command = {
                   `𝗘𝘃𝗲𝗻𝘁: ${outcome.description}\n`;
     if (outcome.rewards.coins) content += `𝗘𝗮𝗿𝗻𝗲𝗱: ${outcome.rewards.coins} 𝖼𝗈𝗂𝗇𝗌\n`;
     if (outcome.rewards.itemKey) content += `𝗙𝗼𝘂𝗻𝗱: ${outcome.rewards.quantity} ${outcome.rewards.itemKey.replace("_", " ")}\n`;
-    content += `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n` +
-               `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝗍𝗋𝖺𝖽𝖾\n` +
+    content += `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗿𝗒\n` +
+               `*> 𝖳�_r𝗮𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝗍𝗋𝖺𝖽𝖾\n` +
                `━━━━━━━ ✕ ━━━━━━\n` +
                `𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
 
