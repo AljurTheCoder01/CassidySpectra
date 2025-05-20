@@ -1,7 +1,4 @@
-const UNISpectra = { 
-  charm: "✦", 
-  standardLine: "•───────────────•" 
-}; // Placeholder; replace with: import { UNISpectra } from "@cassidy/unispectra"
+import { UNISpectra } from "@cassidy/unispectra";
 
 interface Zone {
   key: string;
@@ -28,7 +25,7 @@ const zones: Zone[] = [
   { key: "sand_dunes", name: "𝗦𝗮𝗻𝗱 𝗗𝘂𝗻𝗲𝘀", description: "𝖤𝗇𝖽𝗅𝖾𝗌𝗌 𝖽𝗎𝗇𝖾𝗌 𝗁𝗂𝖽𝗂𝗇𝗀 𝖺 𝗅𝗈𝗌𝗍 𝖼𝖺𝗋𝖺𝗏𝖺𝗇.", cooldown: 9000000 }, // 2.5 hours
   { key: "sky_temples", name: "𝗦𝗸𝘆 𝗧𝗲𝗺𝗽𝗹𝗲𝘀", description: "𝖥𝗅𝗈𝖺𝗍𝗂𝗇𝗀 𝗍𝖾𝗆𝗉𝗅𝖾𝗌 𝗐𝗂𝗍𝗁 𝗆𝗒𝗌𝗍𝗂𝖼𝖺𝗅 𝖺𝗋𝗍𝗂𝖿𝖺𝖼𝗍𝗌.", cooldown: 10800000 }, // 3.0 hours
   { key: "dark_forest", name: "𝗗𝗮𝗿𝗸 𝗙𝗼𝗿𝗲𝘀𝘁", description: "𝖠 𝗁𝖺𝗎𝗇𝗍𝖾𝖽 𝖿𝗈𝗋𝖾𝗌𝗍 𝗐𝗂𝗍𝗁 𝖼𝗎𝗋𝗌𝖾𝖽 𝗋𝖾𝗅𝗂𝖼𝗌.", cooldown: 7200000 }, // 2.0 hours
-  { key: "crystal_lake", name: "𝗖𝗿𝘆𝘀𝘁𝗮𝗹 𝗟𝗮𝗸𝗲", description: "𝖠 𝗌𝗁𝗂𝗆𝗆𝖾𝗋𝗂𝗇𝗀 𝗅𝖺𝗄𝖾 𝗐𝗂𝗍𝗁 𝗆𝖺𝗀𝗂𝖼𝖺𝗅 𝖼𝗋𝗒𝗌𝗍𝖺𝗅𝗌.", cooldown: 3600000 }, // 1.0 hours
+  { key: "crystal_lake", name: "𝗖𝗿𝘆𝘀𝘁𝗮𝗹 𝗟𝗮𝗸𝗲", description: "𝖠 𝗌𝗁𝗂𝗆𝗆𝖾𝗋𝗂𝗇𝗀 𝗅𝖺𝗄𝖾 𝗐𝗂𝗍𝗁 𝗆𝖺𝗀𝗂𝖼𝖺𝗅 𝖼�_r𝗒𝗌𝗍𝖺𝗅𝗌.", cooldown: 3600000 }, // 1.0 hours
   { key: "thunder_cliffs", name: "𝗧𝗵𝘂𝗻𝗱𝗲𝗿 𝗖𝗹𝗶𝗳𝗳𝘀", description: "𝖲𝗍𝗈𝗋𝗆𝗒 𝖼𝗅𝗂𝖿𝖿𝗌 𝗐𝗂𝗍𝗁 𝖾𝗅𝖾𝖼𝗍𝗋𝗂𝖿𝗂𝖾𝖽 𝗀𝖾𝗆𝗌.", cooldown: 12600000 }, // 3.5 hours
   { key: "abyss_ruins", name: "𝗔𝗯𝘆𝘀𝘀 𝗥𝘂𝗶𝗻𝘀", description: "𝖲𝗎𝗇𝗄𝖾𝗇 𝗋𝗎𝗂𝗇𝗌 𝗐𝗂𝗍𝗁 𝖿𝗈𝗋𝗀𝗈𝗍𝗍𝖾𝗇 𝗌𝖾𝖼𝗋𝖾𝗍𝗌.", cooldown: 16200000 }, // 4.5 hours
   { key: "ownirv2_company", name: "𝗼𝘄𝗻𝗶𝗿𝘃𝟮 𝗖𝗼𝗺𝗽𝗮𝗻𝘆", description: "𝖤𝗑𝗉𝗅𝗈𝗋𝖾 𝗍𝗁𝖾 𝗐𝗈𝗋𝗅𝖽 𝗈𝖿 𝖺𝗀𝗀𝗇𝗂 𝗆𝖾𝗆𝖻𝖾𝗋𝗌 𝗈𝖿 𝗈𝗐𝗇𝗂𝗋𝗌𝖵𝟤 𝖢𝗈𝗆𝗉𝖺𝗇𝗒", cooldown: 16200000 }, // 4.5 hours
@@ -149,18 +146,20 @@ const command: Command = {
         return await output.replyStyled(
           [
             `❌ Internal error: Data cache not initialized. Contact bot admin. ${UNISpectra.charm}`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `${UNISpectra.standardLine}`,
+            `Use: adventure to see zones`
           ].join("\n"),
           command.style
         );
       } catch (e) {
         console.error("ReplyStyled error:", e);
-        return await output.reply([
-          `❌ Internal error: Data cache not initialized. Contact bot admin. ${UNISpectra.charm}`,
-          `━━━━━━━ ✕ ━━━━━━`,
-          `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-        ].join("\n"));
+        return await output.reply(
+          [
+            `❌ Internal error: Data cache not initialized. Contact bot admin. ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure to see zones`
+          ].join("\n")
+        );
       }
     }
 
@@ -174,22 +173,20 @@ const command: Command = {
               `❌ You need to provide a name! ${UNISpectra.charm}`,
               `${UNISpectra.standardLine}`,
               `Use: adventure register <name>`,
-              `Example: adventure register Shadow_Warrior`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `Example: adventure register Shadow_Warrior`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ You need to provide a name! ${UNISpectra.charm}`,
-            `${UNISpectra.standardLine}`,
-            `Use: adventure register <name>`,
-            `Example: adventure register Shadow_Warrior`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ You need to provide a name! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure register <name>`,
+              `Example: adventure register Shadow_Warrior`
+            ].join("\n")
+          );
         }
       }
 
@@ -199,19 +196,17 @@ const command: Command = {
         try {
           return await output.replyStyled(
             [
-              `❌ You're already registered as **${userData.adventure.name}**! ${UNISpectra.charm}`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `❌ You're already registered as **${userData.adventure.name}**! ${UNISpectra.charm}`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ You're already registered as **${userData.adventure.name}**! ${UNISpectra.charm}`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ You're already registered as **${userData.adventure.name}**! ${UNISpectra.charm}`
+            ].join("\n")
+          );
         }
       }
 
@@ -223,19 +218,17 @@ const command: Command = {
         try {
           return await output.replyStyled(
             [
-              `❌ Name **${name}** is already taken! Choose another. ${UNISpectra.charm}`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `❌ Name **${name}** is already taken! Choose another. ${UNISpectra.charm}`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ Name **${name}** is already taken! Choose another. ${UNISpectra.charm}`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ Name **${name}** is already taken! Choose another. ${UNISpectra.charm}`
+            ].join("\n")
+          );
         }
       }
 
@@ -254,22 +247,20 @@ const command: Command = {
             `✅ Registered as **${name}**! ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `Start exploring with: adventure <zone_key>`,
-            `Check inventory with: adventure inventory`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `Check inventory with: adventure inventory`
           ].join("\n"),
           command.style
         );
       } catch (e) {
         console.error("ReplyStyled error:", e);
-        return await output.reply([
-          `✅ Registered as **${name}**! ${UNISpectra.charm}`,
-          `${UNISpectra.standardLine}`,
-          `Start exploring with: adventure <zone_key>`,
-          `Check inventory with: adventure inventory`,
-          `━━━━━━━ ✕ ━━━━━━`,
-          `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-        ].join("\n"));
+        return await output.reply(
+          [
+            `✅ Registered as **${name}**! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Start exploring with: adventure <zone_key>`,
+            `Check inventory with: adventure inventory`
+          ].join("\n")
+        );
       }
     }
 
@@ -280,22 +271,20 @@ const command: Command = {
             `❌ You're not registered! ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `Use: adventure register <name>`,
-            `Example: adventure register Shadow_Warrior`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `Example: adventure register Shadow_Warrior`
           ].join("\n"),
           command.style
         );
       } catch (e) {
         console.error("ReplyStyled error:", e);
-        return await output.reply([
-          `❌ You're not registered! ${UNISpectra.charm}`,
-          `${UNISpectra.standardLine}`,
-          `Use: adventure register <name>`,
-          `Example: adventure register Shadow_Warrior`,
-          `━━━━━━━ ✕ ━━━━━━`,
-          `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-        ].join("\n"));
+        return await output.reply(
+          [
+            `❌ You're not registered! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure register <name>`,
+            `Example: adventure register Shadow_Warrior`
+          ].join("\n")
+        );
       }
     }
 
@@ -327,11 +316,6 @@ const command: Command = {
         content.push(`${UNISpectra.standardLine}`, `No adventurers registered yet! ${UNISpectra.charm}`);
       }
 
-      content.push(
-        `━━━━━━━ ✕ ━━━━━━`,
-        `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-      );
-
       try {
         return await output.replyStyled(content.join("\n"), command.style);
       } catch (e) {
@@ -351,9 +335,7 @@ const command: Command = {
         `**Items**: ${items}`,
         `**Coins**: ${userData.money || 0} 💵`,
         `${UNISpectra.standardLine}`,
-        `> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 <𝗂𝗍𝖾𝗆> <𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒> <𝗍𝖺𝗋𝗀𝖾𝗍_𝗎𝗌𝖾𝗋𝖨𝖣>`,
-        `━━━━━━━ ✕ ━━━━━━`,
-        `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+        `> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 <𝗂𝗍𝖾𝗆> <𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒> <𝗍𝖺𝗋𝗀𝖾𝗍_𝗎𝗌𝖾𝗋𝖨𝖣>`
       ];
 
       try {
@@ -372,22 +354,20 @@ const command: Command = {
               `❌ You need to provide item, quantity, and target user ID! ${UNISpectra.charm}`,
               `${UNISpectra.standardLine}`,
               `Use: adventure trade <item> <quantity> <target_userID>`,
-              `Example: adventure trade crystal_shard 2 123456`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `Example: adventure trade crystal_shard 2 123456`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ You need to provide item, quantity, and target user ID! ${UNISpectra.charm}`,
-            `${UNISpectra.standardLine}`,
-            `Use: adventure trade <item> <quantity> <target_userID>`,
-            `Example: adventure trade crystal_shard 2 123456`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ You need to provide item, quantity, and target user ID! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure trade <item> <quantity> <target_userID>`,
+              `Example: adventure trade crystal_shard 2 123456`
+            ].join("\n")
+          );
         }
       }
 
@@ -399,19 +379,17 @@ const command: Command = {
         try {
           return await output.replyStyled(
             [
-              `❌ Invalid quantity! Must be a positive number. ${UNISpectra.charm}`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `❌ Invalid quantity! Must be a positive number. ${UNISpectra.charm}`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ Invalid quantity! Must be a positive number. ${UNISpectra.charm}`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ Invalid quantity! Must be a positive number. ${UNISpectra.charm}`
+            ].join("\n")
+          );
         }
       }
 
@@ -422,21 +400,19 @@ const command: Command = {
             [
               `❌ You don't have enough **${itemKey.replace("_", " ")}**! ${UNISpectra.charm}`,
               `${UNISpectra.standardLine}`,
-              `Check your inventory with: adventure inventory`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `Check your inventory with: adventure inventory`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ You don't have enough **${itemKey.replace("_", " ")}**! ${UNISpectra.charm}`,
-            `${UNISpectra.standardLine}`,
-            `Check your inventory with: adventure inventory`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ You don't have enough **${itemKey.replace("_", " ")}**! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Check your inventory with: adventure inventory`
+            ].join("\n")
+          );
         }
       }
 
@@ -445,19 +421,17 @@ const command: Command = {
         try {
           return await output.replyStyled(
             [
-              `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`
+            ].join("\n")
+          );
         }
       }
 
@@ -465,19 +439,17 @@ const command: Command = {
         try {
           return await output.replyStyled(
             [
-              `❌ You can't trade with yourself! ${UNISpectra.charm}`,
-              `━━━━━━━ ✕ ━━━━━━`,
-              `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+              `❌ You can't trade with yourself! ${UNISpectra.charm}`
             ].join("\n"),
             command.style
           );
         } catch (e) {
           console.error("ReplyStyled error:", e);
-          return await output.reply([
-            `❌ You can't trade with yourself! ${UNISpectra.charm}`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-          ].join("\n"));
+          return await output.reply(
+            [
+              `❌ You can't trade with yourself! ${UNISpectra.charm}`
+            ].join("\n")
+          );
         }
       }
 
@@ -502,22 +474,20 @@ const command: Command = {
             `✅ **${userData.adventure.name} traded!** ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `Traded: ${quantity} **${itemKey.replace("_", " ")}** to **${targetUserData.adventure.name}** (ID: ${targetUserID})`,
-            `Check inventory with: adventure inventory`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `Check inventory with: adventure inventory`
           ].join("\n"),
           command.style
         );
       } catch (e) {
         console.error("ReplyStyled error:", e);
-        return await output.reply([
-          `✅ **${userData.adventure.name} traded!** ${UNISpectra.charm}`,
-          `${UNISpectra.standardLine}`,
-          `Traded: ${quantity} **${itemKey.replace("_", " ")}** to **${targetUserData.adventure.name}** (ID: ${targetUserID})`,
-          `Check inventory with: adventure inventory`,
-          `━━━━━━━ ✕ ━━━━━━`,
-          `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-        ].join("\n"));
+        return await output.reply(
+          [
+            `✅ **${userData.adventure.name} traded!** ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Traded: ${quantity} **${itemKey.replace("_", " ")}** to **${targetUserData.adventure.name}** (ID: ${targetUserID})`,
+            `Check inventory with: adventure inventory`
+          ].join("\n")
+        );
       }
     }
 
@@ -541,11 +511,9 @@ const command: Command = {
         `${UNISpectra.standardLine}`,
         `> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒> 𝗍𝗈 𝖾𝗑𝗉𝗅𝗈𝗋𝖾`,
         `*𝖤𝗑𝖺𝗆𝗉𝗅𝖾: #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒`,
-        `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗂𝗌𝗍 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌`,
+        `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗂𝗌�_t 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌`,
         `*> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-        `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂�_t𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
-        `━━━━━━━ ✕ ━━━━━━`,
-        `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+        `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`
       );
 
       try {
@@ -566,22 +534,20 @@ const command: Command = {
             `❌ Invalid zone key! ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `Use: adventure to see zones`,
-            `Example: adventure shadow_valley`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `Example: adventure shadow_valley`
           ].join("\n"),
           command.style
         );
       } catch (e) {
         console.error("ReplyStyled error:", e);
-        return await output.reply([
-          `❌ Invalid zone key! ${UNISpectra.charm}`,
-          `${UNISpectra.standardLine}`,
-          `Use: adventure to see zones`,
-          `Example: adventure shadow_valley`,
-          `━━━━━━━ ✕ ━━━━━━`,
-          `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
-        ].join("\n"));
+        return await output.reply(
+          [
+            `❌ Invalid zone key! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure to see zones`,
+            `Example: adventure shadow_valley`
+          ].join("\n")
+        );
       }
     }
 
@@ -601,9 +567,7 @@ const command: Command = {
             `⌛ You already explore **${zone.name.replace(/[\u{1D5D4}-\u{1D5ED}]/gu, '')}**! Please wait for ${cooldownText} ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-            `*> 𝖳�_r𝗮𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`
           ].join("\n"),
           command.style
         );
@@ -614,9 +578,7 @@ const command: Command = {
             `⌛ You already explore **${zone.name.replace(/[\u{1D5D4}-\u{1D5ED}]/gu, '')}**! Please wait for ${cooldownText} ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-            `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
-            `━━━━━━━ ✕ ━━━━━━`,
-            `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+            `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`
           ].join("\n")
         );
       }
@@ -646,9 +608,7 @@ const command: Command = {
       outcome.rewards.itemKey ? `**Found**: ${outcome.rewards.quantity} **${outcome.rewards.itemKey.replace("_", " ")}**` : "",
       `${UNISpectra.standardLine}`,
       `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-      `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
-      `━━━━━━━ ✕ ━━━━━━`,
-      `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
+      `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`
     ].filter(Boolean);
 
     try {
