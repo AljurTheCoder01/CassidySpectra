@@ -1,4 +1,4 @@
-import { UNISpectra } from "@cassidy/unispectra"
+import { UNISpectra } from "@cassidy/unispectra";
 
 interface Zone {
   key: string;
@@ -18,17 +18,17 @@ interface Outcome {
 }
 
 const zones: Zone[] = [
-  { key: "shadow_valley", name: "Shadow Valley", description: "A misty valley with hidden relics.", cooldown: 3600000 }, // 1.0 hours
-  { key: "flame_peaks", name: "Flame Peaks", description: "Volcanic peaks with rare ores.", cooldown: 7200000 }, // 2.0 hours
-  { key: "mist_isles", name: "Mist Isles", description: "Foggy islands with ancient ruins.", cooldown: 14400000 }, // 4.0 hours
-  { key: "frost_caverns", name: "Frost Caverns", description: "Icy caves with frozen treasures.", cooldown: 5400000 }, // 1.5 hours
-  { key: "sand_dunes", name: "Sand Dunes", description: "Endless dunes hiding a lost caravan.", cooldown: 9000000 }, // 2.5 hours
-  { key: "sky_temples", name: "Sky Temples", description: "Floating temples with mystical artifacts.", cooldown: 10800000 }, // 3.0 hours
-  { key: "dark_forest", name: "Dark Forest", description: "A haunted forest with cursed relics.", cooldown: 7200000 }, // 2.0 hours
-  { key: "crystal_lake", name: "Crystal Lake", description: "A shimmering lake with magical crystals.", cooldown: 3600000 }, // 1.0 hours
-  { key: "thunder_cliffs", name: "Thunder Cliffs", description: "Stormy cliffs with electrified gems.", cooldown: 12600000 }, // 3.5 hours
-  { key: "abyss_ruins", name: "Abyss Ruins", description: "Sunken ruins with forgotten secrets.", cooldown: 16200000 }, // 4.5 hours
-  { key: "ownirv2_company", name: "ownirv2 Company", description: "Explore the world of aggni members of ownirsV2 Company", cooldown: 16200000 }, // 4.5 hours
+  { key: "shadow_valley", name: "𝗦𝗵𝗮𝗱𝗼𝘄 𝗩𝗮𝗹𝗹𝗲𝘆", description: "A misty valley with hidden relics.", cooldown: 3600000 }, // 1.0 hours
+  { key: "flame_peaks", name: "𝗙𝗹𝗮𝗺𝗲 𝗣𝗲𝗮𝗸𝘀", description: "Volcanic peaks with rare ores.", cooldown: 7200000 }, // 2.0 hours
+  { key: "mist_isles", name: "𝗠𝗶𝘀𝘁 𝗜𝘀𝗹𝗲𝘀", description: "Foggy islands with ancient ruins.", cooldown: 14400000 }, // 4.0 hours
+  { key: "frost_caverns", name: "𝗙𝗿𝗼𝘀𝘁 𝗖𝗮𝘃𝗲𝗿𝗻𝘀", description: "Icy caves with frozen treasures.", cooldown: 5400000 }, // 1.5 hours
+  { key: "sand_dunes", name: "𝗦𝗮𝗻𝗱 𝗗𝘂𝗻𝗲𝘀", description: "Endless dunes hiding a lost caravan.", cooldown: 9000000 }, // 2.5 hours
+  { key: "sky_temples", name: "𝗦𝗸𝘆 𝗧𝗲𝗺𝗽𝗹𝗲𝘀", description: "Floating temples with mystical artifacts.", cooldown: 10800000 }, // 3.0 hours
+  { key: "dark_forest", name: "𝗗𝗮𝗿𝗸 𝗙𝗼𝗿𝗲𝘀𝘁", description: "A haunted forest with cursed relics.", cooldown: 7200000 }, // 2.0 hours
+  { key: "crystal_lake", name: "𝗖𝗿𝘆𝘀𝘁𝗮𝗹 𝗟𝗮𝗸𝗲", description: "A shimmering lake with magical crystals.", cooldown: 3600000 }, // 1.0 hours
+  { key: "thunder_cliffs", name: "𝗧𝗵𝘂𝗻𝗱𝗲𝗿 𝗖𝗹𝗶𝗳𝗳𝘀", description: "Stormy cliffs with electrified gems.", cooldown: 12600000 }, // 3.5 hours
+  { key: "abyss_ruins", name: "𝗔𝗯𝘆𝘀𝘀 𝗥𝘂𝗶𝗻𝘀", description: "Sunken ruins with forgotten secrets.", cooldown: 16200000 }, // 4.5 hours
+  { key: "ownirv2_company", name: "𝗼𝘄𝗻𝗶𝗿𝘀𝘃𝟮 𝗖𝗼𝗺𝗽𝗮𝗻𝘆", description: "Explore the world of aggni members of ownirsV2 Company", cooldown: 16200000 }, // 4.5 hours
 ];
 
 const outcomes: Outcome[] = [
@@ -123,7 +123,7 @@ const command: Command = {
   style: {
     title: {
       content: `${UNISpectra.charm} ADVENTURE 〘 🌍 〙`,
-      line_bottom: "default",
+      line_bottom: "━━━━━━━━━━━━━━━",
       text_font: "double_struck",
     },
     content: {
@@ -510,8 +510,11 @@ const command: Command = {
       try {
         return await output.replyStyled(
           [
-            `❌ You already explored the **${zone.name}** location, you'll be wait until ${cooldownText} ${UNISpectra.charm}`,
+            `⌛ You already explore ${zone.name}! Please wait for ${cooldownText} ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
+            `> Check inventory with: adventure inventory`,
+            `*> Trade items with: adventure trade`,
+            `━━━━━━━ ✕ ━━━━━━`,
           ].join("\n"),
           command.style
         );
@@ -519,14 +522,17 @@ const command: Command = {
         console.error("ReplyStyled error:", e);
         return await output.reply(
           [
-            `❌ You already explored the **${zone.name}** location, you'll be wait until ${cooldownText} ${UNISpectra.charm}`,
+            `⌛ You already explore ${zone.name}! Please wait for ${cooldownText} ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
+            `> Check inventory with: adventure inventory`,
+            `*> Trade items with: adventure trade`,
+            `━━━━━━━ ✕ ━━━━━━`,
           ].join("\n")
         );
       }
     }
 
-    const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+   const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
     const newUserData: UserData = { ...userData };
 
     newUserData.adventure!.cooldowns = newUserData.adventure!.cooldowns || {};
