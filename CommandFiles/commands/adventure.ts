@@ -1,22 +1,5 @@
 import { format } from "cassidy-styler";
 
-/**
- * @type {CassidySpectra.CommandStyle}
- */
-export const style = {
-  title: {
-    content: '**ADVENTURE** 🌍',
-    line_bottom: 'default',
-    text_font: 'double_struck'
-  },
-  content: {
-    text_font: 'fancy',
-    line_bottom_inside_x: 'default',
-    content: null
-  },
-  footer: { content: 'Developed by: Aljur Pogoy', text_font: 'fancy' }
-};
-
 interface Zone {
   key: string;
   name: string;
@@ -102,7 +85,19 @@ interface Command {
     category: string;
     usage: string;
   };
-  style: any; // Using 'any' to match CassidySpectra.CommandStyle dynamically
+  style: {
+    title: {
+      text_font: string;
+      content: string;
+      line_bottom: string;
+    };
+    footer: {
+      content: string;
+      text_font: string;
+    };
+    titleFont: string;
+    contentFont: string;
+  };
   entry: (ctx: CommandContext) => Promise<void>;
 }
 
@@ -114,9 +109,21 @@ const command: Command = {
     author: "Aljur Pogoy",
     description: "Register as an adventurer or explore mystical zones to gain rewards and items!",
     category: "Adventure Games",
-    usage: "adventure register <name> | adventure <zone_key> | adventure list | adventure inventory | adventure trade",
+    usage: "adventure register <name> | adventure <zone_key> | adventure list | adventure inventory | adventure trade <item> <quantity> <target_userID>",
   },
-  style,
+  style: {
+    title: {
+      text_font: "bold",
+      content: "",
+      line_bottom: "default",
+    },
+    footer: {
+      content: "",
+      text_font: "fancy",
+    },
+    titleFont: "bold",
+    contentFont: "fancy",
+  },
   async entry(ctx: CommandContext) {
     const { output, input, usersDB, args } = ctx;
     const userID = input.sid;
@@ -124,9 +131,13 @@ const command: Command = {
 
     if (!usersDB) {
       return await output.reply(
-        format({
-          content: "Internal error: Data cache not initialized. Contact bot admin."
-        })
+        format(
+          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+          "𝖨𝗇𝗍𝖾𝗋𝗇𝖺𝗅 𝖾𝗋𝗋𝗈𝗋: 𝖣𝖺𝗍𝖺 𝖼𝖺𝖼𝗁𝖾 𝗇𝗈𝗍 𝗂𝗇𝗂𝗍𝗂𝖺𝗅𝗂𝗓𝖾𝖽. 𝖢𝗈𝗇𝗍𝖺𝖼𝗍 𝖻𝗈𝗍 𝖺𝖽𝗆𝗂𝗇.\n" +
+          "━━━━━━━ ✕ ━━━━━━\n" +
+          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+          command.style
+        )
       );
     }
 
@@ -135,9 +146,15 @@ const command: Command = {
     if (subcommand === "register") {
       if (!args[1]) {
         return await output.reply(
-          format({
-            content: "You need to provide a name!\nUse: adventure register <name>\n**Example**: adventure register Shadow_Warrior"
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            "𝖸𝗈𝗎 𝗇𝖾𝖾𝖽 𝗍𝗈 𝗉𝗋𝗈𝗏𝗂𝖽𝖾 𝖺 𝗇𝖺𝗆𝖾!\n" +
+            "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 <𝗇𝖺𝗆𝖾>\n" +
+            "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 𝖲𝗁𝖺𝖽𝗈𝗐_𝖶𝖺𝗋𝗋𝗂𝗈𝗋\n" +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
 
@@ -145,9 +162,13 @@ const command: Command = {
 
       if (userData?.adventure?.name) {
         return await output.reply(
-          format({
-            content: `You're already registered as ${userData.adventure.name}!`
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            `𝖸𝗈𝗎'𝗋𝖾 𝖺𝗅𝗋𝖾𝖺𝖽𝗒 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝖺𝗌 ${userData.adventure.name}!\n` +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
 
@@ -157,9 +178,13 @@ const command: Command = {
       );
       if (Object.keys(existing).length > 0) {
         return await output.reply(
-          format({
-            content: `Name ${name} is already taken! Choose another.`
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            `𝖭𝖺𝗆𝖾 ${name} 𝗂𝗌 𝖺𝗅𝗋𝖾𝖺𝖽𝗒 𝗍𝖺𝗄𝖾𝗇! 𝖢𝗁𝗈𝗈𝗌𝖾 𝖺𝗇𝗈𝗍𝗁𝖾𝗋.\n` +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
 
@@ -173,22 +198,36 @@ const command: Command = {
       await usersDB.setItem(userID, newUserData);
 
       return await output.reply(
-        format({
-          content: `Registered as ${name}!\nStart exploring with: adventure <zone_key>\nCheck inventory with: inventory`
-        })
+        format(
+          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+          `𝖱𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝖺𝗌 ${name}!\n` +
+          "𝖲𝗍𝖺𝗋𝗍 𝖾𝗑𝗉𝗅𝗈�_r𝗂𝗇𝗀 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒>\n" +
+          "𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n" +
+          "━━━━━━━ ✕ ━━━━━━\n" +
+          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+          command.style
+        )
       );
     }
 
     if (!userData || !userData.adventure?.name) {
       return await output.reply(
-        format({
-          content: "You're not registered!\nUse: adventure register <name>\n**Example**: adventure register Shadow_Warrior"
-        })
+        format(
+          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+          "𝖸𝗈𝗎'𝗋𝖾 𝗇𝗈𝗍 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽!\n" +
+          "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 <𝗇𝖺𝗆𝖾>\n" +
+          "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 𝖲𝗁𝖺𝖽𝗈𝗐_𝖶𝖺𝗋𝗋𝗂𝗈𝗋\n" +
+          "━━━━━━━ ✕ ━━━━━━\n" +
+          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+          command.style
+        )
       );
     }
 
     if (subcommand === "list") {
-      let content = "Adventurer List:\n";
+      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+                    "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
+                    "𝗔𝗱𝘃𝗲𝗻𝘁𝘂𝗿𝗲𝗿 𝗟𝗶𝘀𝘁:\n━━━━━━━━━━━━━━━\n";
       const allUsers = await usersDB.queryItemAll(
         { "value.adventure.name": { $exists: true } },
         "adventure",
@@ -202,132 +241,156 @@ const command: Command = {
             .map(([key, { quantity }]) => `${key.replace("_", " ")}: ${quantity}`)
             .join(", ") || "None";
           content += `🌍 『 ${data.adventure.name} 』\n`;
-          content += `**User ID**: ${userId}\n`;
-          content += `**Inventory**: ${items}\n`;
-          content += `**Coins**: ${data.money || 0}\n\n`;
+          content += `𝗨𝘀𝗲𝗿 𝗜𝗗: ${userId}\n`;
+          content += `𝗜𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆: ${items}\n`;
+          content += `𝗖𝗼𝗶𝗻𝘀: ${data.money || 0}\n\n`;
         }
       }
 
       if (!content.includes("『")) {
-        content += "No adventurers registered yet!\n";
+        content += "𝖭𝗈 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝗒𝖾𝗍!\n";
       }
+      content += "━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy";
 
-      return await output.reply(
-        format({
-          content: content
-        })
-      );
+      return await output.reply(format(content, command.style));
     }
 
     if (subcommand === "inventory") {
-      const inventory = userData.adventure?.inventory || {};
+      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+                    "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
+                    `𝗔𝗱𝘃𝗲𝗻𝘁𝘂𝗿𝗲𝗿: ${userData.adventure.name}\n━━━━━━━━━━━━━━━\n`;
+      const inventory = userData.adventure.inventory || {};
       const items = Object.entries(inventory)
         .map(([key, { quantity }]) => `${key.replace("_", " ")}: ${quantity}`)
-        .join(", ") || "None";
-      return await output.reply(
-        format({
-          content: `**${userData.adventure.name}'s Inventory**\n\n**Items**: ${items}`
-        })
-      );
+        .join(", ") || "No items yet!";
+      content += `𝗜𝘁𝗲𝗺𝘀: ${items}\n`;
+      content += `𝗖𝗼𝗶𝗻𝘀: ${userData.money || 0}\n`;
+      content += `> 𝖳𝗋𝗮𝗱𝗲 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 <𝗂𝗍𝖾𝗆> <𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒> <𝗍𝖺𝗋𝗀𝖾𝘁_𝗎𝗌𝖾𝗋𝗜𝗗>\n` +
+                 `━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
+
+      return await output.reply(format(content, command.style));
     }
 
     if (subcommand === "trade") {
-      if (args.length < 3) {
+      if (args.length < 4) {
         return await output.reply(
-          format({
-            content: "Use: adventure trade <user_id> <item> <quantity> [optional_price]\n**Example**: adventure trade 123456789 crystal_shard 1 50\nNote: optional_price is in coins if trading for money."
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            "𝖸𝗈𝗎 𝗇𝖾𝖾𝖽 𝗍𝗈 𝗉𝗋𝗈𝗏𝗂𝖽𝖾 𝗂𝗍𝖾𝗆, 𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒, 𝖺𝗇𝖽 𝗍𝖺𝗋𝗀𝖾𝗍 𝗎𝗌𝖾𝗋 𝗜𝗗!\n" +
+            "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 <𝗂𝗍𝖾𝗆> <𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒> <𝗍𝖺𝗋𝗀𝖾𝗍_𝗎𝗌𝖾𝗋𝗜𝗗>\n" +
+            "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 𝖼𝗋𝗒𝗌𝗍𝖺𝗅_𝗌𝗁𝖺𝗋𝖽 𝟤 𝟣𝟤𝟥𝟦𝟧𝟨\n" +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
 
-      const targetID = args[1];
-      const itemKey = args[2].toLowerCase();
-      const quantity = parseInt(args[3], 10);
-      const price = args[4] ? parseInt(args[4], 10) : null;
+      const itemKey = args[1].toLowerCase();
+      const quantity = parseInt(args[2]);
+      const targetUserID = args[3];
 
       if (isNaN(quantity) || quantity <= 0) {
         return await output.reply(
-          format({
-            content: "Invalid quantity! Use a positive number."
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            `𝖨𝗇𝗏𝖺𝗅𝗂𝖽 𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒! 𝖬𝗎𝗌𝗍 𝖻𝖾 𝖺 𝗉𝗈𝗌𝗂𝗍𝗂𝗏𝖾 𝗇𝗎𝗆𝖻𝖾𝗋.\n` +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
 
-      const senderData = await usersDB.getItem(userID);
-      const targetData = await usersDB.getItem(targetID);
-
-      if (!senderData?.adventure?.inventory[itemKey] || senderData.adventure.inventory[itemKey].quantity < quantity) {
+      const userInventory = userData.adventure.inventory || {};
+      if (!userInventory[itemKey] || userInventory[itemKey].quantity < quantity) {
         return await output.reply(
-          format({
-            content: `You don't have enough ${itemKey.replace("_", " ")} to trade!\n**Current**: ${senderData?.adventure?.inventory[itemKey]?.quantity || 0}`
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            `𝖸𝗈𝗎 𝖽𝗈𝗇'𝗍 𝗁𝖺𝗏𝖾 𝖾𝗇𝗈𝗎𝗀𝗁 ${itemKey.replace("_", " ")}!\n` +
+            "𝖢𝗁𝖾𝖼𝗄 𝗒𝗈𝗎𝗋 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n" +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "�_D𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
 
-      if (price) {
-        if (isNaN(price) || price <= 0) {
-          return await output.reply(
-            format({
-              content: "Invalid price! Use a positive number."
-            })
-          );
-        }
-        const newSenderData: UserData = { ...senderData };
-        newSenderData.money = (newSenderData.money || 0) + price;
-        newSenderData.adventure!.inventory[itemKey].quantity -= quantity;
-        if (newSenderData.adventure.inventory[itemKey].quantity === 0) {
-          delete newSenderData.adventure.inventory[itemKey];
-        }
-        await usersDB.setItem(userID, newSenderData);
+      const targetUserData = await usersDB.getItem(targetUserID);
+      if (!targetUserData || !targetUserData.adventure?.name) {
         return await output.reply(
-          format({
-            content: `Traded ${quantity} ${itemKey.replace("_", " ")} for ${price} coins!\n**New Coins**: ${newSenderData.money}`
-          })
-        );
-      } else {
-        if (!targetData || !targetData.adventure?.name) {
-          return await output.reply(
-            format({
-              content: "Target user is not registered or doesn't exist!"
-            })
-          );
-        }
-        const newSenderData: UserData = { ...senderData };
-        const newTargetData: UserData = { ...targetData };
-        newSenderData.adventure!.inventory[itemKey].quantity -= quantity;
-        if (newSenderData.adventure.inventory[itemKey].quantity === 0) {
-          delete newSenderData.adventure.inventory[itemKey];
-        }
-        newTargetData.adventure!.inventory[itemKey] = newTargetData.adventure.inventory[itemKey] || { quantity: 0 };
-        newTargetData.adventure.inventory[itemKey].quantity += quantity;
-        await usersDB.setItem(userID, newSenderData);
-        await usersDB.setItem(targetID, newTargetData);
-        return await output.reply(
-          format({
-            content: `Traded ${quantity} ${itemKey.replace("_", " ")} to ${targetData.adventure.name}!`
-          })
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            `𝖳𝖺𝗋𝗀𝖾𝗍 𝗎𝗌𝖾𝗋 ${targetUserID} 𝗇𝗈𝗍 𝖿𝗈𝗎𝗇𝖽 𝗈𝗋 𝗇𝗈𝗍 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽!\n` +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
         );
       }
+
+      if (targetUserID === userID) {
+        return await output.reply(
+          format(
+            "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+            `𝖸𝗈𝗎 𝖼𝖺𝗇'𝗍 𝗍𝗋𝖺𝖽𝖾 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎𝗋𝗌𝖾𝗅𝖿!\n` +
+            "━━━━━━━ ✕ ━━━━━━\n" +
+            "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+            command.style
+          )
+        );
+      }
+
+      const newUserData: UserData = { ...userData };
+      newUserData.adventure!.inventory[itemKey].quantity -= quantity;
+      if (newUserData.adventure!.inventory[itemKey].quantity === 0) {
+        delete newUserData.adventure!.inventory[itemKey];
+      }
+
+      const newTargetUserData: UserData = { ...targetUserData };
+      newTargetUserData.adventure!.inventory = newTargetUserData.adventure!.inventory || {};
+      newTargetUserData.adventure!.inventory[itemKey] = {
+        quantity: (newTargetUserData.adventure!.inventory[itemKey]?.quantity || 0) + quantity,
+      };
+
+      await usersDB.setItem(userID, newUserData);
+      await usersDB.setItem(targetUserID, newTargetUserData);
+
+      return await output.reply(
+        format(
+          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+          `**${userData.adventure.name} 𝗍𝗋𝗮𝖽𝖾𝖽!**\n` +
+          `𝗧𝗿𝗮𝗱𝗲𝗱: ${quantity} ${itemKey.replace("_", " ")} 𝗍𝗈 ${targetUserData.adventure.name} (ID: ${targetUserID})\n` +
+          `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝘃𝗲𝗻𝘁𝗼𝗿𝘆 𝘄𝗶𝘁𝗵: 𝖺𝖽𝘃𝗲𝗻𝘁𝘂𝗿𝗲 𝗶𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆\n` +
+          `━━━━━━━ ✕ ━━━━━━\n` +
+          `𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`,
+          command.style
+        )
+      );
     }
 
     if (!args[0]) {
-      let content = "Adventure Zones:\n";
+      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+                    "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
+                    "𝘼𝙙𝙫𝙚𝙣𝙩𝙪𝙧𝙚 𝙕𝙤𝙣𝙚𝙨:\n━━━━━━━━━━━━━━━\n";
       zones.forEach((z) => {
         const lastAdventured = userData.adventure?.cooldowns?.[z.key]?.lastAdventured || 0;
         const timeLeft = lastAdventured + z.cooldown - Date.now();
         content += `🌍 『 ${z.name} 』\n`;
-        content += `**Key**: ${z.key}\n`;
-        content += `**Description**: ${z.description}\n`;
-        content += `**Cooldown**: ${(z.cooldown / 3600000).toFixed(1)} hours\n`;
-        content += `**Status**: ${timeLeft > 0 ? `On cooldown (${Math.ceil(timeLeft / 60000)} min)` : "Ready"}\n\n`;
+        content += `𝗞𝗲𝘆: ${z.key}\n`;
+        content += `𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: ${z.description}\n`;
+        content += `𝗖𝗼𝗼𝗹𝗱𝗼𝘄𝗻: ${(z.cooldown / 3600000).toFixed(1)} 𝗁𝗈𝘂𝗿𝘀\n`;
+        content += `𝗦𝘁𝗮𝘁𝘂𝘀: ${timeLeft > 0 ? `On cooldown (${Math.ceil(timeLeft / 60000)} min)` : "𝖱𝖾𝖺𝖽𝘆"}\n`;
+        content += `━━━━━━━━━━━━━━━\n`;
       });
-      content += `> Use #adventure <zone_key> to explore\n**Example**: #adventure shadow_valley\n> Use #adventure list to see adventurers\n> Use #adventure inventory to view your items\n> Use #adventure trade to trade items`;
+      content += `> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒> 𝗍𝗈 𝖾𝗑𝗉𝗅𝗈𝗋𝖾\n` +
+                 `*𝖤𝗑𝖺𝗆𝗉𝗅𝖾: #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒\n` +
+                 `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗶𝘀𝘁 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗿𝗌\n` +
+                 `*> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝘃𝗲𝗻𝘁𝗼𝗿𝘆 𝘄𝗶𝘁𝗵: 𝖺𝖽𝘃𝗲𝗻𝘁𝘂𝗿𝗲 𝗶𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆\n` +
+                 `*> 𝖳𝗿�_a𝗱𝗲 𝗶𝘁𝗲𝗺𝘀 𝘄𝗶𝘁𝗵: 𝖺𝖽𝘃𝗲𝗻𝘁𝘂𝗿𝗲 𝘁𝗿𝗮𝗱𝗲\n` +
+                 `━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
 
-      return await output.reply(
-        format({
-          content: content
-        })
-      );
+      return await output.reply(format(content, command.style));
     }
 
     const zoneKey = args[0].toLowerCase();
@@ -335,9 +398,15 @@ const command: Command = {
 
     if (!zone) {
       return await output.reply(
-        format({
-          content: `Invalid zone key!\nUse: adventure to see zones\n**Example**: adventure shadow_valley`
-        })
+        format(
+          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+          `𝖨𝗇𝗏𝖺𝗅𝗂𝖽 𝗓𝗈𝗇𝖾 𝗄𝖾𝗒!\n` +
+          "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗈 𝗌𝖾𝖾 𝗓𝗈𝗇𝖾𝗌\n" +
+          "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒\n" +
+          "━━━━━━━ ✕ ━━━━━━\n" +
+          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+          command.style
+        )
       );
     }
 
@@ -345,9 +414,14 @@ const command: Command = {
     if (Date.now() < lastAdventured + zone.cooldown && !input.isAdmin) {
       const timeLeft = Math.ceil((lastAdventured + zone.cooldown - Date.now()) / 60000);
       return await output.reply(
-        format({
-          content: `**${userData.adventure.name} is on cooldown!**\nTry again in ${timeLeft} minutes.`
-        })
+        format(
+          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+          `**${userData.adventure.name} 𝗂𝗌 𝗈𝗇 𝖼𝗈𝗈𝗅𝖽𝗈𝘄𝗻!**\n` +
+          `𝖳𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗂𝗇 ${timeLeft} 𝗆𝗂𝗇𝘂𝘁𝗲𝘀.\n` +
+          "━━━━━━━ ✕ ━━━━━━\n" +
+          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy",
+          command.style
+        )
       );
     }
 
@@ -367,16 +441,17 @@ const command: Command = {
 
     await usersDB.setItem(userID, newUserData);
 
-    let content = `Adventured in ${zone.name}!\n**Event**: ${outcome.description}\n`;
-    if (outcome.rewards.coins) content += `**Earned**: ${outcome.rewards.coins} coins\n`;
-    if (outcome.rewards.itemKey) content += `**Found**: ${outcome.rewards.quantity} ${outcome.rewards.itemKey.replace("_", " ")}\n`;
-    content += `> Check inventory with: inventory\n> Trade items with: trade`;
+    let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
+                  `**𝖠𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝖽 𝗂𝗇 ${zone.name}!**\n` +
+                  `𝗘𝘃𝗲𝗻𝘁: ${outcome.description}\n`;
+    if (outcome.rewards.coins) content += `𝗘𝗮𝗿𝗻𝗲𝗱: ${outcome.rewards.coins} 𝖼𝗼𝗶𝗻𝘀\n`;
+    if (outcome.rewards.itemKey) content += `𝗙𝗼𝘂𝗻𝗱: ${outcome.rewards.quantity} ${outcome.rewards.itemKey.replace("_", " ")}\n`;
+    content += `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝘃𝗲𝗻𝘁𝗼𝗿𝘆 𝘄𝗶𝘁𝗵: 𝖺𝖽𝘃𝗲𝗻𝘁𝘂𝗿𝗲 𝗶𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆\n` +
+               `*> 𝖳𝗿𝗮𝗱𝗲 𝗶𝘁𝗲𝗺𝘀 𝘄𝗶𝘁𝗵: 𝖺𝖽𝘃𝗲𝗻𝘁𝘂𝗿𝗲 𝘁𝗿𝗮𝗱𝗲\n` +
+               `━━━━━━━ ✕ ━━━━━━\n` +
+               `𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
 
-    return await output.reply(
-      format({
-        content: content
-      })
-    );
+    return await output.reply(format(content, command.style));
   },
 };
 
