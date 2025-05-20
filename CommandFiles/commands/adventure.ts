@@ -1,13 +1,10 @@
-const UNISpectra = { 
-  charm: "✦", 
-  standardLine: "•───────────────•" 
-}; // Placeholder; replace with: import { UNISpectra } from "@cassidy/unispectra"
+import { UNISpectra } from "@cassidy/unispectra";
 
 interface Zone {
   key: string;
   name: string;
   description: string;
-  cooldown: number; // in milliseconds
+  cooldown: number; 
 }
 
 interface Outcome {
