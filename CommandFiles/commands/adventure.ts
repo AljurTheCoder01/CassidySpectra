@@ -622,6 +622,126 @@ const newUserData: UserData = { ...userData };
         const coinsWon = Math.floor(Math.random() * 50) + 10; // 10-60 coins
         newUserData.money = (newUserData.money || 0) + coinsWon;
         newTargetUserData.money = Math.max(0, (newTargetUserData.money || 0) - coinsWon);
+if (subcommand === "fight") {
+      if (!args[1]) {
+        try {
+          return await output.replyStyled(
+            [
+              `❌ You need to provide a target user ID to fight! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure fight <target_userID>`,
+              `Example: adventure fight 123456`
+            ].join("\n"),
+            command.style
+          );
+        } catch (e) {
+          console.error("ReplyStyled error:", e);
+          return await output.reply(
+            [
+              `❌ You need to provide a target user ID to fight! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure fight <target_userID>`,
+              `Example: adventure fight 123456`
+            ].join("\n")
+          );
+        }
+      }
+
+      const targetUserID = args[1];
+      const targetUserData = await usersDB.getItem(targetUserID);
+
+      if (!targetUserData || !targetUserData.adventure?.name) {
+        try {
+          return await output.replyStyled(
+            [
+              `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`
+            ].join("\n"),
+            command.style
+          );
+        } catch (e) {
+          console.error("ReplyStyled error:", e);
+          return await output.reply(
+            [
+              `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`
+            ].join("\n")
+          );
+        }
+      }
+
+      // Initialize target user's health if undefined
+      if (targetUserData.adventure.health === undefined) {
+        targetUserData.adventure.health = 100;
+        await usersDB.setItem(targetUserID, targetUserData);
+      }
+
+      if (targetUserID === userID) {
+        try {
+          return await output.replyStyled(
+            [
+              `❌ You can't fight yourself! ${UNISpectra.charm}`
+            ].join("\n"),
+            command.style
+          );
+        } catch (e) {
+          console.error("ReplyStyled error:", e);
+          return await output.reply(
+            [
+              `❌ You can't fight yourself! ${UNISpectra.charm}`
+            ].join("\n")
+          );
+        }
+      }
+
+      if (userData.adventure.health <= 0) {
+        try {
+          return await output.replyStyled(
+            [
+              `❌ You're too weak to fight! Rest to recover health. ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure rest`
+            ].join("\n"),
+            command.style
+          );
+        } catch (e) {
+          console.error("ReplyStyled error:", e);
+          return await output.reply(
+            [
+              `❌ You're too weak to fight! Rest to recover health. ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure rest`
+            ].join("\n")
+          );
+        }
+      }
+
+      if (targetUserData.adventure.health <= 0) {
+        try {
+          return await output.replyStyled(
+            [
+              `❌ **${targetUserData.adventure.name}** is too weak to fight right now! ${UNISpectra.charm}`
+            ].join("\n"),
+            command.style
+          );
+        } catch (e) {
+          console.error("ReplyStyled error:", e);
+          return await output.reply(
+            [
+              `❌ **${targetUserData.adventure.name}** is too weak to fight right now! ${UNISpectra.charm}`
+            ].join("\n")
+          );
+        }
+      }
+
+      const newUserData: UserData = { ...userData };
+      const newTargetUserData: UserData = { ...targetUserData };
+
+      const winChance = Math.random();
+      let resultMessage = "";
+      if (winChance > 0.5) {
+        // User wins
+        const coinsWon = Math.floor(Math.random() * 50) + 10; // 10-60 coins
+        newUserData.money = (newUserData.money || 0) + coinsWon;
+        newTargetUserData.money = Math.max(0, (newTargetUserData.money || 0) - coinsWon);
         newUserData.adventure.health = Math.max(0, newUserData.adventure.health - 10); // Lose 10 health
         newTargetUserData.adventure.health = Math.max(0, newTargetUserData.adventure.health - 20); // Target loses 20 health
         resultMessage = [
@@ -629,11 +749,12 @@ const newUserData: UserData = { ...userData };
           `${UNISpectra.standardLine}`,
           `**Earned**: ${coinsWon} coins 💵`,
           `**Your Health**: ${newUserData.adventure.health}/100`,
-          `**${targetUserData.adventure.name}'s Health**: ${newTargetUserData.adventure.health}/100`
+          `**${targetUserData.adventure.name}'s Health**: ${newTargetUserData.adventure.health}/100`,
+          `━━━━━━━ ✕ ━━━━━━`
         ].join("\n");
       } else {
         // Target wins
-        const coinsLost = Math.floor(Math.random() * 50) + 10;
+        const coinsLost = Math.floor(Math.random() * 51) + 10; // 10-60 coins
         newUserData.money = Math.max(0, (newUserData.money || 0) - coinsLost);
         newTargetUserData.money = (newTargetUserData.money || 0) + coinsLost;
         newUserData.adventure.health = Math.max(0, newUserData.adventure.health - 20); // Lose 20 health
@@ -643,7 +764,8 @@ const newUserData: UserData = { ...userData };
           `${UNISpectra.standardLine}`,
           `**Lost**: ${coinsLost} coins 💵`,
           `**Your Health**: ${newUserData.adventure.health}/100`,
-          `**${targetUserData.adventure.name}'s Health**: ${newTargetUserData.adventure.health}/100`
+          `**${targetUserData.adventure.name}'s Health**: ${newTargetUserData.adventure.health}/100`,
+          `━━━━━━━ ✕ ━━━━━━`
         ].join("\n");
       }
 
@@ -651,13 +773,12 @@ const newUserData: UserData = { ...userData };
       await usersDB.setItem(targetUserID, newTargetUserData);
 
       try {
-        return await output.replyStyled(resultMessage, command.style);
+        return await output.replyStyled(resultMessage + command.style.footer.content, command.style);
       } catch (e) {
         console.error("ReplyStyled error:", e);
-        return await output.reply(resultMessage);
+        return await output.reply(resultMessage + command.style.footer.content);
       }
     }
-
     if (subcommand === "rest") {
       const restCooldown = 1800000; // 30 minutes
       const lastRested = userData.adventure.lastRested || 0;
