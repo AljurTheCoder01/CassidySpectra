@@ -28,7 +28,7 @@ const zones: Zone[] = [
   { key: "crystal_lake", name: "Crystal Lake", description: "A shimmering lake with magical crystals.", cooldown: 3600000 },
   { key: "thunder_cliffs", name: "Thunder Cliffs", description: "Stormy cliffs with electrified gems.", cooldown: 12600000 },
   { key: "abyss_ruins", name: "Abyss Ruins", description: "Sunken ruins with forgotten secrets.", cooldown: 16200000 },
-  { key: "ownirv2_company", name: "ownirsv2 Company", description: "Explore the world of aggni members of ownirsV2 Company", cooldown: 16200000 },
+  { key: "ownirv2_company", name: "ownirv2 Company", description: "Explore the world of aggni members of ownirsV2 Company", cooldown: 16200000 },
 ];
 
 const outcomes: Outcome[] = [
@@ -86,15 +86,7 @@ interface Command {
     usage: string;
   };
   style: {
-    title: {
-      text_font: string;
-      content: string;
-      line_bottom: string;
-    };
-    footer: {
-      content: string;
-      text_font: string;
-    };
+    title: string;
     titleFont: string;
     contentFont: string;
   };
@@ -112,15 +104,7 @@ const command: Command = {
     usage: "adventure register <name> | adventure <zone_key> | adventure list | adventure inventory | adventure trade",
   },
   style: {
-    title: {
-      text_font: "double_struck",
-      content: "",
-      line_bottom: "default",
-    },
-    footer: {
-      content: "",
-      text_font: "fancy",
-    },
+    title: "**ADVENTURE** 🌍",
     titleFont: "double_struck",
     contentFont: "fancy_italic",
   },
@@ -132,12 +116,10 @@ const command: Command = {
     if (!usersDB) {
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: "Internal error: Data cache not initialized. Contact bot admin.",
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -148,12 +130,10 @@ const command: Command = {
       if (!args[1]) {
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: "You need to provide a name!\nUse: adventure register <name>\n**Example**: adventure register Shadow_Warrior",
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -163,12 +143,10 @@ const command: Command = {
       if (userData?.adventure?.name) {
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: `You're already registered as ${userData.adventure.name}!`,
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -180,12 +158,10 @@ const command: Command = {
       if (Object.keys(existing).length > 0) {
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: `Name ${name} is already taken! Choose another.`,
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -201,12 +177,10 @@ const command: Command = {
 
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: `Registered as ${name}!\nStart exploring with: adventure <zone_key>\nCheck inventory with: inventory`,
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -214,12 +188,10 @@ const command: Command = {
     if (!userData || !userData.adventure?.name) {
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: "You're not registered!\nUse: adventure register <name>\n**Example**: adventure register Shadow_Warrior",
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -251,12 +223,10 @@ const command: Command = {
 
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: content,
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -268,12 +238,10 @@ const command: Command = {
         .join(", ") || "None";
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: `${userData.adventure.name}'s Inventory\n**Items**: ${items}`,
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -282,12 +250,10 @@ const command: Command = {
       if (args.length < 3) {
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: "Use: adventure trade <user_id> <item> <quantity> [optional_price]\n**Example**: adventure trade 123456789 crystal_shard 1 50\nNote: optional_price is in coins if trading for money.",
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -300,12 +266,10 @@ const command: Command = {
       if (isNaN(quantity) || quantity <= 0) {
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: "Invalid quantity! Use a positive number.",
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -316,12 +280,10 @@ const command: Command = {
       if (!senderData?.adventure?.inventory[itemKey] || senderData.adventure.inventory[itemKey].quantity < quantity) {
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: `You don't have enough ${itemKey.replace("_", " ")} to trade!\n**Current**: ${senderData?.adventure?.inventory[itemKey]?.quantity || 0}`,
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -330,12 +292,10 @@ const command: Command = {
         if (isNaN(price) || price <= 0) {
           return await output.reply(
             format({
-              title: "〘 🌍 〙 **ADVENTURE**",
-              titlePattern: "{emojis} {word}",
+              title: "**ADVENTURE** 🌍",
               content: "Invalid price! Use a positive number.",
               titleFont: "double_struck",
               contentFont: "fancy_italic",
-              footer: "Developed by: Aljur Pogoy",
             })
           );
         }
@@ -348,24 +308,20 @@ const command: Command = {
         await usersDB.setItem(userID, newSenderData);
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: `Traded ${quantity} ${itemKey.replace("_", " ")} for ${price} coins!\n**New Coins**: ${newSenderData.money}`,
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       } else {
         if (!targetData || !targetData.adventure?.name) {
           return await output.reply(
             format({
-              title: "〘 🌍 〙 **ADVENTURE**",
-              titlePattern: "{emojis} {word}",
+              title: "**ADVENTURE** 🌍",
               content: "Target user is not registered or doesn't exist!",
               titleFont: "double_struck",
               contentFont: "fancy_italic",
-              footer: "Developed by: Aljur Pogoy",
             })
           );
         }
@@ -381,12 +337,10 @@ const command: Command = {
         await usersDB.setItem(targetID, newTargetData);
         return await output.reply(
           format({
-            title: "〘 🌍 〙 **ADVENTURE**",
-            titlePattern: "{emojis} {word}",
+            title: "**ADVENTURE** 🌍",
             content: `Traded ${quantity} ${itemKey.replace("_", " ")} to ${targetData.adventure.name}!`,
             titleFont: "double_struck",
             contentFont: "fancy_italic",
-            footer: "Developed by: Aljur Pogoy",
           })
         );
       }
@@ -407,12 +361,10 @@ const command: Command = {
 
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: content,
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -423,12 +375,10 @@ const command: Command = {
     if (!zone) {
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: `Invalid zone key!\nUse: adventure to see zones\n**Example**: adventure shadow_valley`,
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -438,12 +388,10 @@ const command: Command = {
       const timeLeft = Math.ceil((lastAdventured + zone.cooldown - Date.now()) / 60000);
       return await output.reply(
         format({
-          title: "〘 🌍 〙 **ADVENTURE**",
-          titlePattern: "{emojis} {word}",
+          title: "**ADVENTURE** 🌍",
           content: `${userData.adventure.name} is on cooldown!\nTry again in ${timeLeft} minutes.`,
           titleFont: "double_struck",
           contentFont: "fancy_italic",
-          footer: "Developed by: Aljur Pogoy",
         })
       );
     }
@@ -471,12 +419,10 @@ const command: Command = {
 
     return await output.reply(
       format({
-        title: "〘 🌍 〙 **ADVENTURE**",
-        titlePattern: "{emojis} {word}",
+        title: "**ADVENTURE** 🌍",
         content: content,
         titleFont: "double_struck",
         contentFont: "fancy_italic",
-        footer: "Developed by: Aljur Pogoy",
       })
     );
   },
