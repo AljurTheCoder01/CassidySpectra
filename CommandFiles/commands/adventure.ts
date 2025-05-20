@@ -19,7 +19,7 @@ interface Outcome {
 
 const zones: Zone[] = [
   { key: "shadow_valley", name: "𝗦𝗵𝗮𝗱𝗼𝘄 𝗩𝗮𝗹𝗹𝗲𝘆", description: "𝖠 𝗆𝗂𝗌𝗍𝗒 𝗏𝖺𝗅𝗅𝖾𝗒 𝗐𝗂𝗍𝗁 𝗁𝗂𝖽𝖽𝖾𝗇 𝗋𝖾𝗅𝗂𝖼𝗌.", cooldown: 3600000 }, // 1.0 hour
-  { key: "flame_peaks", name: "𝗙𝗹𝗮𝗺𝗲 𝗣𝗲𝗮𝗄𝘀", description: "𝖵𝗈𝗅𝖼𝖺𝗇𝗂𝖼 𝗉𝖾𝖺𝗄𝗌 𝗐𝗂𝗍𝗁 𝗋𝖺𝗋𝖾 𝗈𝗋𝖾𝗌.", cooldown: 7200000 }, // 2.0 hours
+  { key: "flame_peaks", name: "𝗙𝗹𝗮𝗺𝗲 𝗣𝗲𝗮𝗸𝘀", description: "𝖵𝗈𝗅𝖼𝖺𝗇𝗂𝖼 𝗉𝖾𝖺𝗄𝗌 𝗐𝗂𝗍𝗁 𝗋𝖺𝗋𝖾 𝗈𝗋𝖾𝗌.", cooldown: 7200000 }, // 2.0 hours
   { key: "mist_isles", name: "𝗠𝗶𝘀𝘁 𝗜𝘀𝗹𝗲𝘀", description: "𝖥𝗈𝗀𝗀𝗒 𝗂𝗌𝗅𝖺𝗇𝖽𝗌 𝗐𝗂𝗍𝗁 𝖺𝗇𝖼𝗂𝖾𝗇𝗍 𝗋𝗎𝗂𝗇𝗌.", cooldown: 14400000 }, // 4.0 hours
   { key: "frost_caverns", name: "𝗙𝗿𝗼𝘀𝘁 𝗖𝗮𝘃𝗲𝗿𝗻𝘀", description: "𝖨𝖼𝗒 𝖼𝖺𝗏𝖾𝗌 𝗐𝗂𝗍𝗁 𝖿𝗋𝗈𝗓𝖾𝗇 𝗍𝗋𝖾𝖺𝗌𝗎𝗋𝖾𝗌.", cooldown: 5400000 }, // 1.5 hours
   { key: "sand_dunes", name: "𝗦𝗮𝗻𝗱 𝗗𝘂𝗻𝗲𝘀", description: "𝖤𝗇𝖽𝗅𝖾𝗌𝗌 𝖽𝗎𝗇𝖾𝗌 𝗁𝗂𝖽𝗂𝗇𝗀 𝖺 𝗅𝗈𝗌𝗍 𝖼𝖺𝗋𝖺𝗏𝖺𝗇.", cooldown: 9000000 }, // 2.5 hours
@@ -162,8 +162,16 @@ const command: Command = {
         );
       }
     }
-
-    const userData = await usersDB.getItem(userID) || { adventure: { inventory: {}, cooldowns: {} }, money: 0 };
+    let userData = await usersDB.getItem(userID);
+    if (!userData) {
+      userData = { adventure: { inventory: {}, cooldowns: {} }, money: 0 };
+    }
+    if (!userData.adventure) {
+      userData.adventure = { inventory: {}, cooldowns: {} };
+    }
+    if (!userData.adventure.cooldowns) {
+      userData.adventure.cooldowns = {};
+    }
 
     if (subcommand === "register") {
       if (!args[1]) {
@@ -369,8 +377,7 @@ const command: Command = {
             ].join("\n")
           );
         }
-      }
-
+    }
       const itemKey = args[1].toLowerCase();
       const quantity = parseInt(args[2]);
       const targetUserID = args[3];
@@ -524,7 +531,6 @@ const command: Command = {
       }
     }
 
-    
     const zoneKey = args[0].toLowerCase();
     const zone = zones.find((z) => z.key === zoneKey);
 
@@ -554,19 +560,14 @@ const command: Command = {
 
     const lastAdventured = userData.adventure.cooldowns[zoneKey]?.lastAdventured || 0;
     const currentTime = Date.now();
-    const timeSinceLast = currentTime - lastAdventured;
-    if (timeSinceLast < zone.cooldown && !input.isAdmin) {
-      const timeLeftMs = zone.cooldown - timeSinceLast;
-      const hoursLeft = Math.floor(timeLeftMs / 3600000);
-      const minutesLeft = Math.ceil((timeLeftMs % 3600000) / 60000);
-      const cooldownText = hoursLeft > 0 ? `${hoursLeft} ${hoursLeft === 1 ? "hour" : "hours"} ${minutesLeft} ${minutesLeft === 1 ? "minute" : "minutes"}` : `${minutesLeft} ${minutesLeft === 1 ? "minute" : "minutes"}`;
+    if (currentTime < lastAdventured + zone.cooldown && !input.isAdmin) {
+      const timeLeftMs = (lastAdventured + zone.cooldown) - currentTime;
+      const minutesLeft = Math.ceil(timeLeftMs / 60000);
       try {
         return await output.replyStyled(
           [
-            `⌛ You already explored **${zone.name.replace(/[\u{1D5D4}-\u{1D5ED}]/gu, '')}**! Please wait until ${cooldownText} remaining ${UNISpectra.charm}`,
-            `${UNISpectra.standardLine}`,
-            `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-            `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`
+            `${userData.adventure.name} 𝗂𝗌 𝗈𝗇 𝖼𝗈𝗈𝗅𝖽𝗈𝗐𝗇!`,
+            `𝖳𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗂𝗇 ${minutesLeft} 𝗆𝗂𝗇𝗎𝗍𝖾𝗌.`
           ].join("\n"),
           command.style
         );
@@ -574,19 +575,15 @@ const command: Command = {
         console.error("ReplyStyled error:", e);
         return await output.reply(
           [
-            `⌛ You already explored **${zone.name.replace(/[\u{1D5D4}-\u{1D5ED}]/gu, '')}**! Please wait until ${cooldownText} remaining ${UNISpectra.charm}`,
-            `${UNISpectra.standardLine}`,
-            `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-            `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`
+            `${userData.adventure.name} 𝗂𝗌 𝗈𝗇 𝖼𝗈𝗈𝗅𝖽𝗈𝗐𝗇!`,
+            `𝖳𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗂𝗇 ${minutesLeft} 𝗆𝗂𝗇𝗎𝗍𝖾𝗌.`
           ].join("\n")
         );
       }
     }
-
-    const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+     const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
     const newUserData: UserData = { ...userData };
 
-    newUserData.adventure.cooldowns = newUserData.adventure.cooldowns || {};
     newUserData.adventure.cooldowns[zoneKey] = { lastAdventured: currentTime };
     newUserData.money = (newUserData.money || 0) + (outcome.rewards.coins || 0);
 
