@@ -133,6 +133,7 @@ const command: Command = {
     },
     footer: {
       content: "**Developed by:** Aljur Pogoy",
+      text_font: "plain",
     },
   },
   async entry(ctx: CommandContext) {
