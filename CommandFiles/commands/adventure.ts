@@ -1,4 +1,7 @@
-import { UNISpectra } from "@cassidy/unispectra"
+const UNISpectra = { 
+  charm: "✦", 
+  standardLine: "•───────────────•" 
+}; // Placeholder; replace with: import { UNISpectra } from "@cassidy/unispectra"
 
 interface Zone {
   key: string;
@@ -517,7 +520,8 @@ const command: Command = {
         ].join("\n"));
       }
     }
-if (!args[0]) {
+
+    if (!args[0]) {
       let content = [`📋 𝗔𝗱𝘃𝗲𝗻𝘁𝘂𝗿𝗲 𝗭𝗼𝗻𝗲𝘀 ${UNISpectra.charm}`];
       zones.forEach((z) => {
         const lastAdventured = userData.adventure?.cooldowns?.[z.key]?.lastAdventured || 0;
@@ -539,7 +543,7 @@ if (!args[0]) {
         `*𝖤𝗑𝖺𝗆𝗉𝗅𝖾: #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒`,
         `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗂𝗌𝗍 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌`,
         `*> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-        `*> 𝖳�_r𝗮𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
+        `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂�_t𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
         `━━━━━━━ ✕ ━━━━━━`,
         `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
       );
@@ -597,7 +601,7 @@ if (!args[0]) {
             `⌛ You already explore **${zone.name.replace(/[\u{1D5D4}-\u{1D5ED}]/gu, '')}**! Please wait for ${cooldownText} ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
             `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
-            `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
+            `*> 𝖳�_r𝗮𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
             `━━━━━━━ ✕ ━━━━━━`,
             `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
           ].join("\n"),
@@ -609,7 +613,7 @@ if (!args[0]) {
           [
             `⌛ You already explore **${zone.name.replace(/[\u{1D5D4}-\u{1D5ED}]/gu, '')}**! Please wait for ${cooldownText} ${UNISpectra.charm}`,
             `${UNISpectra.standardLine}`,
-            `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗿𝗒`,
+            `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒`,
             `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾`,
             `━━━━━━━ ✕ ━━━━━━`,
             `𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝖽 𝖻𝗒: 𝖠𝗅𝗃𝗎𝗋 𝖯𝗈𝗀𝗈𝗒`
