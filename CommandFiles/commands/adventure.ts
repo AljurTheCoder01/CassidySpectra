@@ -1,6 +1,4 @@
-import { format } from "cassidy-styler";
-
-const UNIRedux = { arrow: "➤" }; // Placeholder; replace with actual UNIRedux if available
+import { UNISpectra } from "@cassidy/unispectra"
 
 interface Zone {
   key: string;
@@ -68,6 +66,7 @@ interface UsersDB {
 interface CommandContext {
   output: {
     reply: (message: string) => Promise<void>;
+    replyStyled: (message: string, style: CassidySpectra.CommandStyle) => Promise<void>;
   };
   input: {
     sid: string;
@@ -77,8 +76,8 @@ interface CommandContext {
   args: string[];
 }
 
-interface Command {
-  meta: {
+interface CassidySpectra {
+  CommandMeta: {
     name: string;
     otherNames: string[];
     version: string;
@@ -87,6 +86,27 @@ interface Command {
     category: string;
     usage: string;
   };
+  CommandStyle: {
+    title: {
+      content: string;
+      line_bottom: string;
+      text_font: string;
+    };
+    content: {
+      text_font: string;
+      line_bottom_inside_x: string;
+      content: null;
+    };
+    footer: {
+      content: string;
+      text_font: string;
+    };
+  };
+}
+
+interface Command {
+  meta: CassidySpectra.CommandMeta;
+  style: CassidySpectra.CommandStyle;
   entry: (ctx: CommandContext) => Promise<void>;
 }
 
@@ -100,6 +120,22 @@ const command: Command = {
     category: "Adventure Games",
     usage: "adventure register <name> | adventure <zone_key> | adventure list | adventure inventory | adventure trade <item> <quantity> <target_userID>",
   },
+  style: {
+    title: {
+      content: `${UNISpectra.charm} ADVENTURE 〘 🌍 〙`,
+      line_bottom: "default",
+      text_font: "double_struck",
+    },
+    content: {
+      text_font: "fancy",
+      line_bottom_inside_x: "default",
+      content: null,
+    },
+    footer: {
+      content: "Developed by: Aljur Pogoy",
+      text_font: "fancy",
+    },
+  },
   async entry(ctx: CommandContext) {
     const { output, input, usersDB, args } = ctx;
     const userID = input.sid;
@@ -107,18 +143,13 @@ const command: Command = {
 
     if (!usersDB) {
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content: "Internal error: Data cache not initialized. Contact bot admin.",
-          })
+        return await output.replyStyled(
+          `❌ Internal error: Data cache not initialized. Contact bot admin. ${UNISpectra.charm}`,
+          command.style
         );
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply("Internal error: Data cache not initialized. Contact bot admin.");
+        console.error("ReplyStyled error:", e);
+        return await output.reply(`❌ Internal error: Data cache not initialized. Contact bot admin. ${UNISpectra.charm}`);
       }
     }
 
@@ -127,25 +158,23 @@ const command: Command = {
     if (subcommand === "register") {
       if (!args[1]) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content:
-                "You need to provide a name!\n" +
-                "Use: adventure register <name>\n" +
-                "Example: adventure register Shadow_Warrior",
-            })
+          return await output.replyStyled(
+            [
+              `❌ You need to provide a name! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure register <name>`,
+              `Example: adventure register Shadow_Warrior`,
+            ].join("\n"),
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(
-            "You need to provide a name!\n" +
-            "Use: adventure register <name>\n" +
-            "Example: adventure register Shadow_Warrior"
-          );
+          console.error("ReplyStyled error:", e);
+          return await output.reply([
+            `❌ You need to provide a name! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure register <name>`,
+            `Example: adventure register Shadow_Warrior`,
+          ].join("\n"));
         }
       }
 
@@ -153,18 +182,13 @@ const command: Command = {
 
       if (userData?.adventure?.name) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content: `You're already registered as ${userData.adventure.name}!`,
-            })
+          return await output.replyStyled(
+            `❌ You're already registered as **${userData.adventure.name}**! ${UNISpectra.charm}`,
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(`You're already registered as ${userData.adventure.name}!`);
+          console.error("ReplyStyled error:", e);
+          return await output.reply(`❌ You're already registered as **${userData.adventure.name}**! ${UNISpectra.charm}`);
         }
       }
 
@@ -174,18 +198,13 @@ const command: Command = {
       );
       if (Object.keys(existing).length > 0) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content: `Name ${name} is already taken! Choose another.`,
-            })
+          return await output.replyStyled(
+            `❌ Name **${name}** is already taken! Choose another. ${UNISpectra.charm}`,
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(`Name ${name} is already taken! Choose another.`);
+          console.error("ReplyStyled error:", e);
+          return await output.reply(`❌ Name **${name}** is already taken! Choose another. ${UNISpectra.charm}`);
         }
       }
 
@@ -199,54 +218,50 @@ const command: Command = {
       await usersDB.setItem(userID, newUserData);
 
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content:
-              `Registered as ${name}!\n` +
-              "Start exploring with: adventure <zone_key>\n" +
-              "Check inventory with: adventure inventory",
-          })
+        return await output.replyStyled(
+          [
+            `✅ Registered as **${name}**! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Start exploring with: adventure <zone_key>`,
+            `Check inventory with: adventure inventory`,
+          ].join("\n"),
+          command.style
         );
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(
-          `Registered as ${name}!\n` +
-          "Start exploring with: adventure <zone_key>\n" +
-          "Check inventory with: adventure inventory"
-        );
+        console.error("ReplyStyled error:", e);
+        return await output.reply([
+          `✅ Registered as **${name}**! ${UNISpectra.charm}`,
+          `${UNISpectra.standardLine}`,
+          `Start exploring with: adventure <zone_key>`,
+          `Check inventory with: adventure inventory`,
+        ].join("\n"));
       }
     }
 
     if (!userData || !userData.adventure?.name) {
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content:
-              "You're not registered!\n" +
-              "Use: adventure register <name>\n" +
-              "Example: adventure register Shadow_Warrior",
-          })
+        return await output.replyStyled(
+          [
+            `❌ You're not registered! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure register <name>`,
+            `Example: adventure register Shadow_Warrior`,
+          ].join("\n"),
+          command.style
         );
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(
-          "You're not registered!\n" +
-          "Use: adventure register <name>\n" +
-          "Example: adventure register Shadow_Warrior"
-        );
+        console.error("ReplyStyled error:", e);
+        return await output.reply([
+          `❌ You're not registered! ${UNISpectra.charm}`,
+          `${UNISpectra.standardLine}`,
+          `Use: adventure register <name>`,
+          `Example: adventure register Shadow_Warrior`,
+        ].join("\n"));
       }
     }
 
     if (subcommand === "list") {
-      let content = "**Adventurer List**:\n";
+      let content = [`📋 **Adventurer List** ${UNISpectra.charm}`];
       const allUsers = await usersDB.queryItemAll(
         { "value.adventure.name": { $exists: true } },
         "adventure",
@@ -259,81 +274,70 @@ const command: Command = {
           const items = Object.entries(inventory)
             .map(([key, { quantity }]) => `${key.replace("_", " ")}: ${quantity}`)
             .join(", ") || "None";
-          content += `🌍 『 ${data.adventure.name} 』\n`;
-          content += `**User ID**: ${userId}\n`;
-          content += `**Inventory**: ${items}\n`;
-          content += `**Coins**: ${data.money || 0}\n\n`;
+          content.push(
+            `${UNISpectra.standardLine}`,
+            `🌍 **${data.adventure.name}**`,
+            `**User ID**: ${userId}`,
+            `**Inventory**: ${items}`,
+            `**Coins**: ${data.money || 0} 💵`
+          );
         }
       }
 
-      if (!content.includes("『")) {
-        content += "No adventurers registered yet!\n";
+      if (content.length === 1) {
+        content.push(`${UNISpectra.standardLine}`, `No adventurers registered yet! ${UNISpectra.charm}`);
       }
 
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content,
-          })
-        );
+        return await output.replyStyled(content.join("\n"), command.style);
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(content);
+        console.error("ReplyStyled error:", e);
+        return await output.reply(content.join("\n"));
       }
     }
 
     if (subcommand === "inventory") {
-      let content = `**Adventurer**: ${userData.adventure.name}\n`;
       const inventory = userData.adventure.inventory || {};
       const items = Object.entries(inventory)
         .map(([key, { quantity }]) => `${key.replace("_", " ")}: ${quantity}`)
         .join(", ") || "No items yet!";
-      content += `**Items**: ${items}\n`;
-      content += `**Coins**: ${userData.money || 0}\n`;
-      content += `> Trade items with: adventure trade <item> <quantity> <target_userID>`;
+      const content = [
+        `👤 **${userData.adventure.name}** ${UNISpectra.charm}`,
+        `${UNISpectra.standardLine}`,
+        `**Items**: ${items}`,
+        `**Coins**: ${data.money || 0} 💵`
+        `${UNISpectra.standardLine}`,
+        `> Trade items with: adventure trade <item> <quantity> <target_userID>`,
+      ];
 
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content,
-          })
-        );
+        return await output.replyStyled(content.join("\n"), command.style);
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(content);
+        console.error("ReplyStyled error:", e);
+        return await output.reply(content.join("\n"));
       }
     }
 
     if (subcommand === "trade") {
       if (args.length < 4) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content:
-                "You need to provide item, quantity, and target user ID!\n" +
-                "Use: adventure trade <item> <quantity> <target_userID>\n" +
-                "Example: adventure trade crystal_shard 2 123456",
-            })
+          return await output.replyStyled(
+            [
+              `❌ You need to provide item, quantity, and target user ID! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Use: adventure trade <item> <quantity> <target_userID>`,
+              `Example: adventure trade crystal_shard 2 123456`,
+            ].join("\n"),
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(
-            "You need to provide item, quantity, and target user ID!\n" +
-            "Use: adventure trade <item> <quantity> <target_userID>\n" +
-            "Example: adventure trade crystal_shard 2 123456"
-          );
+          console.error("ReplyStyled error:", e);
+          return await output.reply([
+            `❌ You need to provide item, quantity, and target user ID! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure trade <item> <quantity> <target_userID>`,
+            `Example: adventure trade crystal_shard 2 123456`,
+          ].join("\n"));
         }
       }
 
@@ -343,76 +347,59 @@ const command: Command = {
 
       if (isNaN(quantity) || quantity <= 0) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content: `Invalid quantity! Must be a positive number.`,
-            })
+          return await output.replyStyled(
+            `❌ Invalid quantity! Must be a positive number. ${UNISpectra.charm}`,
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(`Invalid quantity! Must be a positive number.`);
+          console.error("ReplyStyled error:", e);
+          return await output.reply(`❌ Invalid quantity! Must be a positive number. ${UNISpectra.charm}`);
         }
       }
 
       const userInventory = userData.adventure.inventory || {};
       if (!userInventory[itemKey] || userInventory[itemKey].quantity < quantity) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content:
-                `You don't have enough ${itemKey.replace("_", " ")}!\n` +
-                "Check your inventory with: adventure inventory",
-            })
+          return await output.replyStyled(
+            [
+              `❌ You don't have enough **${itemKey.replace("_", " ")}**! ${UNISpectra.charm}`,
+              `${UNISpectra.standardLine}`,
+              `Check your inventory with: adventure inventory`,
+            ].join("\n"),
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(
-            `You don't have enough ${itemKey.replace("_", " ")}!\n` +
-            "Check your inventory with: adventure inventory"
-          );
+          console.error("ReplyStyled error:", e);
+          return await output.reply([
+            `❌ You don't have enough **${itemKey.replace("_", " ")}**! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Check your inventory with: adventure inventory`,
+          ].join("\n"));
         }
       }
 
       const targetUserData = await usersDB.getItem(targetUserID);
       if (!targetUserData || !targetUserData.adventure?.name) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content: `Target user ${targetUserID} not found or not registered!`,
-            })
+          return await output.replyStyled(
+            `❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`,
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(`Target user ${targetUserID} not found or not registered!`);
+          console.error("ReplyStyled error:", e);
+          return await output.reply(`❌ Target user **${targetUserID}** not found or not registered! ${UNISpectra.charm}`);
         }
       }
 
       if (targetUserID === userID) {
         try {
-          return await output.reply(
-            format({
-              title: "〘 🌍 〙 ADVENTURE",
-              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-              titleFont: "double_struck",
-              contentFont: "fancy_italic",
-              content: `You can't trade with yourself!`,
-            })
+          return await output.replyStyled(
+            `❌ You can't trade with yourself! ${UNISpectra.charm}`,
+            command.style
           );
         } catch (e) {
-          console.error("Format error:", e);
-          return await output.reply(`You can't trade with yourself!`);
+          console.error("ReplyStyled error:", e);
+          return await output.reply(`❌ You can't trade with yourself! ${UNISpectra.charm}`);
         }
       }
 
@@ -432,58 +419,54 @@ const command: Command = {
       await usersDB.setItem(targetUserID, newTargetUserData);
 
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content:
-              `**${userData.adventure.name} traded!**\n` +
-              `Traded: ${quantity} ${itemKey.replace("_", " ")} to ${targetUserData.adventure.name} (ID: ${targetUserID})\n` +
-              `> Check inventory with: adventure inventory`,
-          })
+        return await output.replyStyled(
+          [
+            `✅ **${userData.adventure.name} traded!** ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Traded: ${quantity} **${itemKey.replace("_", " ")}** to **${targetUserData.adventure.name}** (ID: ${targetUserID})`,
+            `Check inventory with: adventure inventory`,
+          ].join("\n"),
+          command.style
         );
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(
-          `**${userData.adventure.name} traded!**\n` +
-          `Traded: ${quantity} ${itemKey.replace("_", " ")} to ${targetUserData.adventure.name} (ID: ${targetUserID})\n` +
-          `> Check inventory with: adventure inventory`
-        );
+        console.error("ReplyStyled error:", e);
+        return await output.reply([
+          `✅ **${userData.adventure.name} traded!** ${UNISpectra.charm}`,
+          `${UNISpectra.standardLine}`,
+          `Traded: ${quantity} **${itemKey.replace("_", " ")}** to **${targetUserData.adventure.name}** (ID: ${targetUserID})`,
+          `Check inventory with: adventure inventory`,
+        ].join("\n"));
       }
     }
 
     if (!args[0]) {
-      let content = "Adventure Zones:\n";
+      let content = [`📋 **Adventure Zones** ${UNISpectra.charm}`];
       zones.forEach((z) => {
         const lastAdventured = userData.adventure?.cooldowns?.[z.key]?.lastAdventured || 0;
         const timeLeft = lastAdventured + z.cooldown - Date.now();
-        content += `🌍 『 ${z.name} 』\n`;
-        content += `**Key**: ${z.key}\n`;
-        content += `**Description**: ${z.description}\n`;
-        content += `**Cooldown**: ${(z.cooldown / 3600000).toFixed(1)} hours\n`;
-        content += `**Status**: ${timeLeft > 0 ? `On cooldown (${Math.ceil(timeLeft / 60000)} min)` : "Ready"}\n\n`;
+        content.push(
+          `${UNISpectra.standardLine}`,
+          `🌍 **${z.name}**`,
+          `**Key**: ${z.key}`,
+          `**Description**: ${z.description}`,
+          `**Cooldown**: ${(z.cooldown / 3600000).toFixed(1)} hours`,
+          `**Status**: ${timeLeft > 0 ? `On cooldown (${Math.ceil(timeLeft / 60000)} min)` : "Ready"}`
+        );
       });
-      content += `> Use #adventure <zone_key> to explore\n` +
-                 `*Example: #adventure shadow_valley\n` +
-                 `*> Use #adventure list to see adventurers\n` +
-                 `*> Check inventory with: adventure inventory\n` +
-                 `*> Trade items with: adventure trade`;
+      content.push(
+        `${UNISpectra.standardLine}`,
+        `> Use #adventure <zone_key> to explore`,
+        `*Example: #adventure shadow_valley`,
+        `*> Use #adventure list to see adventurers`,
+        `*> Check inventory with: adventure inventory`,
+        `*> Trade items with: adventure trade`
+      );
 
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content,
-          })
-        );
+        return await output.replyStyled(content.join("\n"), command.style);
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(content);
+        console.error("ReplyStyled error:", e);
+        return await output.reply(content.join("\n"));
       }
     }
 
@@ -492,25 +475,23 @@ const command: Command = {
 
     if (!zone) {
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content:
-              `Invalid zone key!\n` +
-              "Use: adventure to see zones\n" +
-              "Example: adventure shadow_valley",
-          })
+        return await output.replyStyled(
+          [
+            `❌ Invalid zone key! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Use: adventure to see zones`,
+            `Example: adventure shadow_valley`,
+          ].join("\n"),
+          command.style
         );
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(
-          `Invalid zone key!\n` +
-          "Use: adventure to see zones\n" +
-          "Example: adventure shadow_valley"
-        );
+        console.error("ReplyStyled error:", e);
+        return await output.reply([
+          `❌ Invalid zone key! ${UNISpectra.charm}`,
+          `${UNISpectra.standardLine}`,
+          `Use: adventure to see zones`,
+          `Example: adventure shadow_valley`,
+        ].join("\n"));
       }
     }
 
@@ -518,23 +499,21 @@ const command: Command = {
     if (Date.now() < lastAdventured + zone.cooldown && !input.isAdmin) {
       const timeLeft = Math.ceil((lastAdventured + zone.cooldown - Date.now()) / 60000);
       try {
-        return await output.reply(
-          format({
-            title: "〘 🌍 〙 ADVENTURE",
-            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-            titleFont: "double_struck",
-            contentFont: "fancy_italic",
-            content:
-              `**${userData.adventure.name} is on cooldown!**\n` +
-              `Try again in ${timeLeft} minutes.`,
-          })
+        return await output.replyStyled(
+          [
+            `❌ **${userData.adventure.name}** is on cooldown! ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+            `Try again in ${timeLeft} minutes.`,
+          ].join("\n"),
+          command.style
         );
       } catch (e) {
-        console.error("Format error:", e);
-        return await output.reply(
-          `**${userData.adventure.name} is on cooldown!**\n` +
-          `Try again in ${timeLeft} minutes.`
-        );
+        console.error("ReplyStyled error:", e);
+        return await output.reply([
+          `❌ **${userData.adventure.name}** is on cooldown! ${UNISpectra.charm}`,
+          `${UNISpectra.standardLine}`,
+          `Try again in ${timeLeft} minutes.`,
+        ].join("\n"));
       }
     }
 
@@ -554,26 +533,22 @@ const command: Command = {
 
     await usersDB.setItem(userID, newUserData);
 
-    let content = `**Adventured in ${zone.name}!**\n` +
-                  `**Event**: ${outcome.description}\n`;
-    if (outcome.rewards.coins) content += `**Earned**: ${outcome.rewards.coins} coins\n`;
-    if (outcome.rewards.itemKey) content += `**Found**: ${outcome.rewards.quantity} ${outcome.rewards.itemKey.replace("_", " ")}\n`;
-    content += `> Check inventory with: adventure inventory\n` +
-               `*> Trade items with: adventure trade`;
+    const content = [
+      `✅ Adventured in **${zone.name}**! ${UNISpectra.charm}`,
+      `${UNISpectra.standardLine}`,
+      `**Event**: ${outcome.description}`,
+      outcome.rewards.coins ? `**Earned**: ${outcome.rewards.coins} coins 💵` : "",
+      outcome.rewards.itemKey ? `**Found**: ${outcome.rewards.quantity} **${outcome.rewards.itemKey.replace("_", " ")}**` : "",
+      `${UNISpectra.standardLine}`,
+      `> Check inventory with: adventure inventory`,
+      `*> Trade items with: adventure trade`,
+    ].filter(Boolean);
 
     try {
-      return await output.reply(
-        format({
-          title: "〘 🌍 〙 ADVENT genealogical treeURE",
-          titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
-          titleFont: "double_struck",
-          contentFont: "fancy_italic",
-          content,
-        })
-      );
+      return await output.replyStyled(content.join("\n"), command.style);
     } catch (e) {
-      console.error("Format error:", e);
-      return await output.reply(content);
+      console.error("ReplyStyled error:", e);
+      return await output.reply(content.join("\n"));
     }
   },
 };
