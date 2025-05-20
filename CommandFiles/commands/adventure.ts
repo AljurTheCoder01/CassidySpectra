@@ -1,3 +1,4 @@
+// iwan kong gagana to
 import { UNISpectra } from "@cassidy/unispectra"
 
 interface Zone {
@@ -305,7 +306,7 @@ const command: Command = {
         `👤 **${userData.adventure.name}** ${UNISpectra.charm}`,
         `${UNISpectra.standardLine}`,
         `**Items**: ${items}`,
-        `**Coins**: ${data.money || 0} 💵`
+        `**Coins**: ${userData.money || 0} 💵`,
         `${UNISpectra.standardLine}`,
         `> Trade items with: adventure trade <item> <quantity> <target_userID>`,
       ];
@@ -541,7 +542,7 @@ const command: Command = {
       outcome.rewards.itemKey ? `**Found**: ${outcome.rewards.quantity} **${outcome.rewards.itemKey.replace("_", " ")}**` : "",
       `${UNISpectra.standardLine}`,
       `> Check inventory with: adventure inventory`,
-      `*> Trade items with: adventure trade`,
+      `*> Trade items with:adventure trade`,
     ].filter(Boolean);
 
     try {
