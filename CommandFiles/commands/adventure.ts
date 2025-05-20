@@ -123,7 +123,7 @@ const command: Command = {
   style: {
     title: {
       content: `${UNISpectra.charm} ADVENTURE 〘 🌍 〙`,
-      line_bottom: "━━━━━━━━━━━━━━━",
+      line_bottom: "",
       text_font: "double_struck",
     },
     content: {
@@ -133,7 +133,6 @@ const command: Command = {
     },
     footer: {
       content: "**Developed by:** Aljur Pogoy",
-      text_font: "plain", // Changed to plain to avoid fancy font
     },
   },
   async entry(ctx: CommandContext) {
