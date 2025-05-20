@@ -1,4 +1,4 @@
-#system install adventure.ts import { format } from "cassidy-styler";
+import { format } from "cassidy-styler";
 
 const UNIRedux = { arrow: "➤" }; // Placeholder; replace with actual UNIRedux if available
 
