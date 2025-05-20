@@ -1,5 +1,4 @@
-import { UNISpectra } from "@cassidy/unispectra";
-
+import { UNISpectra } from "@cassidy/unispectra"
 
 interface Zone {
   key: string;
@@ -133,7 +132,7 @@ const command: Command = {
       content: null,
     },
     footer: {
-      content: "**Developed by:** Aljur Pogoy",
+      content: "Developed by: Aljur Pogoy",
       text_font: "fancy",
     },
   },
@@ -226,7 +225,7 @@ const command: Command = {
             `Start exploring with: adventure <zone_key>`,
             `Check inventory with: adventure inventory`,
           ].join("\n"),
-            command.style
+          command.style
         );
       } catch (e) {
         console.error("ReplyStyled error:", e);
@@ -238,7 +237,8 @@ const command: Command = {
         ].join("\n"));
       }
     }
-if (!userData || !userData.adventure?.name) {
+
+    if (!userData || !userData.adventure?.name) {
       try {
         return await output.replyStyled(
           [
@@ -317,7 +317,8 @@ if (!userData || !userData.adventure?.name) {
         return await output.reply(content.join("\n"));
       }
     }
-if (subcommand === "trade") {
+
+    if (subcommand === "trade") {
       if (args.length < 4) {
         try {
           return await output.replyStyled(
@@ -457,10 +458,10 @@ if (subcommand === "trade") {
       content.push(
         `${UNISpectra.standardLine}`,
         `> Use #adventure <zone_key> to explore`,
-        `Example: ${prefix}adventure shadow_valley`,
-        `> Use #adventure list to see adventurers`,
-        `> Check inventory with: adventure inventory`,
-        `> Trade items with: adventure trade`
+        `*Example: #adventure shadow_valley`,
+        `*> Use #adventure list to see adventurers`,
+        `*> Check inventory with: adventure inventory`,
+        `*> Trade items with: adventure trade`
       );
 
       try {
@@ -496,34 +497,35 @@ if (subcommand === "trade") {
       }
     }
 
-    const lastAdventured = userData.adventure?.cooldowns?.[zoneKey]?.lastAdventured || 
+    const lastAdventured = userData.adventure?.cooldowns?.[zoneKey]?.lastAdventured || 0;
     if (Date.now() < lastAdventured + zone.cooldown && !input.isAdmin) {
-  const timeLeftMinutes = Math.ceil((lastAdventured + zone.cooldown - Date.now()) / 60000);
-  let cooldownText: string;
-  if (timeLeftMinutes >= 60) {
-    const hours = Math.ceil(timeLeftMinutes / 60);
-    cooldownText = `${hours} ${hours === 1 ? "hour" : "hours"}`;
-  } else {
-    cooldownText = `${timeLeftMinutes} ${timeLeftMinutes === 1 ? "minute" : "minutes"}`;
-  }
-  try {
-    return await output.replyStyled(
-      [
-        `❌ You already explored the **${zone.name}** location, you'll be wait until ${cooldownText} ${UNISpectra.charm}`,
-        `${UNISpectra.standardLine}`,
-      ].join("\n"),
-      command.style
-    );
-  } catch (e) {
-    console.error("ReplyStyled error:", e);
-    return await output.reply(
-      [
-        `❌ You already explored the **${zone.name}** location, you'll be wait until ${cooldownText} ${UNISpectra.charm}`,
-        `${UNISpectra.standardLine}`,
-      ].join("\n")
-    );
-  }
+      const timeLeftMinutes = Math.ceil((lastAdventured + zone.cooldown - Date.now()) / 60000);
+      let cooldownText: string;
+      if (timeLeftMinutes >= 60) {
+        const hours = Math.ceil(timeLeftMinutes / 60);
+        cooldownText = `${hours} ${hours === 1 ? "hour" : "hours"}`;
+      } else {
+        cooldownText = `${timeLeftMinutes} ${timeLeftMinutes === 1 ? "minute" : "minutes"}`;
+      }
+      try {
+        return await output.replyStyled(
+          [
+            `❌ You already explored the **${zone.name}** location, you'll be wait until ${cooldownText} ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+          ].join("\n"),
+          command.style
+        );
+      } catch (e) {
+        console.error("ReplyStyled error:", e);
+        return await output.reply(
+          [
+            `❌ You already explored the **${zone.name}** location, you'll be wait until ${cooldownText} ${UNISpectra.charm}`,
+            `${UNISpectra.standardLine}`,
+          ].join("\n")
+        );
+      }
     }
+
     const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
     const newUserData: UserData = { ...userData };
 
@@ -548,7 +550,7 @@ if (subcommand === "trade") {
       outcome.rewards.itemKey ? `**Found**: ${outcome.rewards.quantity} **${outcome.rewards.itemKey.replace("_", " ")}**` : "",
       `${UNISpectra.standardLine}`,
       `> Check inventory with: adventure inventory`,
-      `> Trade items with: adventure trade`,
+      `*> Trade items with: adventure trade`,
     ].filter(Boolean);
 
     try {
