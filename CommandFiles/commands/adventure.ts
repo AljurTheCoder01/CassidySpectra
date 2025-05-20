@@ -1,4 +1,6 @@
-import { format } from "cassidy-styler";
+#system install adventure.ts import { format } from "cassidy-styler";
+
+const UNIRedux = { arrow: "➤" }; // Placeholder; replace with actual UNIRedux if available
 
 interface Zone {
   key: string;
@@ -85,19 +87,6 @@ interface Command {
     category: string;
     usage: string;
   };
-  style: {
-    title: {
-      text_font: string;
-      content: string;
-      line_bottom: string;
-    };
-    footer: {
-      content: string;
-      text_font: string;
-    };
-    titleFont: string;
-    contentFont: string;
-  };
   entry: (ctx: CommandContext) => Promise<void>;
 }
 
@@ -109,20 +98,7 @@ const command: Command = {
     author: "Aljur Pogoy",
     description: "Register as an adventurer or explore mystical zones to gain rewards and items!",
     category: "Adventure Games",
-    usage: "adventure register <name> | adventure <zone_key> | adventure list | adventure inventory | adventure trade <item> <quantity> <target_user>",
-  },
-  style: {
-    title: {
-      text_font: "bold",
-      content: "",
-      line_bottom: "default",
-    },
-    footer: {
-      content: "",
-      text_font: "fancy",
-    },
-    titleFont: "bold",
-    contentFont: "fancy",
+    usage: "adventure register <name> | adventure <zone_key> | adventure list | adventure inventory | adventure trade <item> <quantity> <target_userID>",
   },
   async entry(ctx: CommandContext) {
     const { output, input, usersDB, args } = ctx;
@@ -130,37 +106,66 @@ const command: Command = {
     const subcommand = (args[0] || "").toLowerCase();
 
     if (!usersDB) {
-      return await output.reply(
-        "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        "𝖨𝗇𝗍𝖾𝗋𝗇𝖺𝗅 𝖾𝗋𝗋𝗈𝗋: 𝖣𝖺𝗍𝖺 𝖼𝖺𝖼𝗁𝖾 𝗇𝗈𝗍 𝗂𝗇𝗂𝗍𝗂𝖺𝗅𝗂𝗓𝖾𝖽. 𝖢𝗈𝗇𝗍𝖺𝖼𝗍 𝖻𝗈𝗍 𝖺𝖽𝗆𝗂𝗇.\n" +
-        "━━━━━━━ ✕ ━━━━━━\n" +
-        "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-      );
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content: "Internal error: Data cache not initialized. Contact bot admin.",
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply("Internal error: Data cache not initialized. Contact bot admin.");
+      }
     }
 
     const userData = await usersDB.getItem(userID);
 
     if (subcommand === "register") {
       if (!args[1]) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          "𝖸𝗈𝗎 𝗇𝖾𝖾𝖽 𝗍𝗈 𝗉𝗋𝗈𝗏𝗂𝖽𝖾 𝖺 𝗇𝖺𝗆𝖾!\n" +
-          "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 <𝗇𝖺𝗆𝖾>\n" +
-          "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 𝖲𝗁𝖺𝖽𝗈𝗐_𝖶𝖺𝗋𝗋𝗂𝗈𝗋\n" +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content:
+                "You need to provide a name!\n" +
+                "Use: adventure register <name>\n" +
+                "Example: adventure register Shadow_Warrior",
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(
+            "You need to provide a name!\n" +
+            "Use: adventure register <name>\n" +
+            "Example: adventure register Shadow_Warrior"
+          );
+        }
       }
 
       const name = args.slice(1).join("_");
 
       if (userData?.adventure?.name) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖸𝗈𝗎'𝗋𝖾 𝖺𝗅𝗋𝖾𝖺𝖽𝗒 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝖺𝗌 ${userData.adventure.name}!\n` +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content: `You're already registered as ${userData.adventure.name}!`,
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(`You're already registered as ${userData.adventure.name}!`);
+        }
       }
 
       const existing = await usersDB.queryItemAll(
@@ -168,12 +173,20 @@ const command: Command = {
         "adventure"
       );
       if (Object.keys(existing).length > 0) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖭𝖺𝗆𝖾 ${name} 𝗂𝗌 𝖺𝗅𝗋𝖾𝖺𝖽𝗒 𝗍𝖺𝗄𝖾𝗇! 𝖢𝗁𝗈𝗈𝗌𝖾 𝖺𝗇𝗈𝗍𝗁𝖾𝗋.\n` +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content: `Name ${name} is already taken! Choose another.`,
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(`Name ${name} is already taken! Choose another.`);
+        }
       }
 
       const newUserData: UserData = {
@@ -185,31 +198,55 @@ const command: Command = {
 
       await usersDB.setItem(userID, newUserData);
 
-      return await output.reply(
-        "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        `𝖱𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝖺𝗌 ${name}!\n` +
-        "𝖲𝗍𝖺𝗋𝗍 𝖾𝗑𝗉𝗅𝗈𝗋𝗂𝗇𝗀 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒>\n" +
-        "𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n" +
-        "━━━━━━━ ✕ ━━━━━━\n" +
-        "𝗗𝗲𝘃�_e𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-      );
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content:
+              `Registered as ${name}!\n` +
+              "Start exploring with: adventure <zone_key>\n" +
+              "Check inventory with: adventure inventory",
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(
+          `Registered as ${name}!\n` +
+          "Start exploring with: adventure <zone_key>\n" +
+          "Check inventory with: adventure inventory"
+        );
+      }
     }
 
     if (!userData || !userData.adventure?.name) {
-      return await output.reply(
-        "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        "𝖸𝗈𝗎'𝗋𝖾 𝗇𝗈𝗍 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽!\n" +
-        "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 <𝗇𝖺𝗆𝖾>\n" +
-        "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋 𝖲𝗁𝖺𝖽𝗈𝗐_𝖶𝖺𝗋𝗋𝗂𝗈𝗋\n" +
-        "━━━━━━━ ✕ ━━━━━━\n" +
-        "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-      );
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content:
+              "You're not registered!\n" +
+              "Use: adventure register <name>\n" +
+              "Example: adventure register Shadow_Warrior",
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(
+          "You're not registered!\n" +
+          "Use: adventure register <name>\n" +
+          "Example: adventure register Shadow_Warrior"
+        );
+      }
     }
 
     if (subcommand === "list") {
-      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-                    "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
-                    "𝗔𝗱𝘃𝗲𝗻𝘁𝘂𝗿𝗲𝗿 𝗟𝗶𝘀𝘁:\n━━━━━━━━━━━━━━━\n";
+      let content = "**Adventurer List**:\n";
       const allUsers = await usersDB.queryItemAll(
         { "value.adventure.name": { $exists: true } },
         "adventure",
@@ -223,97 +260,160 @@ const command: Command = {
             .map(([key, { quantity }]) => `${key.replace("_", " ")}: ${quantity}`)
             .join(", ") || "None";
           content += `🌍 『 ${data.adventure.name} 』\n`;
-          content += `𝗨𝘀𝗲𝗿 𝗜𝗗: ${userId}\n`;
-          content += `𝗜𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆: ${items}\n`;
-          content += `𝗖𝗼𝗶𝗻𝘀: ${data.money || 0}\n\n`;
+          content += `**User ID**: ${userId}\n`;
+          content += `**Inventory**: ${items}\n`;
+          content += `**Coins**: ${data.money || 0}\n\n`;
         }
       }
 
       if (!content.includes("『")) {
-        content += "𝖭𝗈 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽 𝗒𝖾𝗍!\n";
+        content += "No adventurers registered yet!\n";
       }
-      content += "━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy";
 
-      return await output.reply(content);
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content,
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(content);
+      }
     }
 
     if (subcommand === "inventory") {
-      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-                    "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
-                    `𝗔𝗱𝘃𝗲𝗻𝘁𝘂𝗿𝗲𝗿: ${userData.adventure.name}\n━━━━━━━━━━━━━━━\n`;
+      let content = `**Adventurer**: ${userData.adventure.name}\n`;
       const inventory = userData.adventure.inventory || {};
       const items = Object.entries(inventory)
         .map(([key, { quantity }]) => `${key.replace("_", " ")}: ${quantity}`)
         .join(", ") || "No items yet!";
-      content += `𝗜𝘁𝗲𝗺𝘀: ${items}\n`;
-      content += `𝗖𝗼𝗶𝗻𝘀: ${userData.money || 0}\n`;
-      content += `> 𝖳𝗋𝗮𝗱𝗲 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 <𝗂𝗍𝖾𝗆> <𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒> <𝗍𝖺𝗋𝗀𝖾𝗍_𝗎𝗌𝖾𝗋>\n` +
-                 `━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
+      content += `**Items**: ${items}\n`;
+      content += `**Coins**: ${userData.money || 0}\n`;
+      content += `> Trade items with: adventure trade <item> <quantity> <target_userID>`;
 
-      return await output.reply(content);
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content,
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(content);
+      }
     }
 
     if (subcommand === "trade") {
       if (args.length < 4) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          "𝖸𝗈𝗎 𝗇𝖾𝖾𝖽 𝗍𝗈 𝗉𝗋𝗈𝗏𝗂𝖽𝖾 𝗂𝗍𝖾𝗆, 𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒, 𝖺𝗇𝖽 𝗍𝖺𝗋𝗀𝖾𝗍 𝗎𝗌𝖾𝗋!\n" +
-          "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 <𝗂𝗍𝖾𝗆> <𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒> <𝗍𝖺𝗋𝗀𝖾𝗍_𝗎𝗌𝖾𝗋>\n" +
-          "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾 𝖼𝗋𝗒𝗌𝗍𝖺𝗅_𝗌𝗁𝖺𝗋𝖽 𝟤 𝖲𝗁𝖺𝖽𝗈𝗐_𝖶𝖺𝗋𝗋𝗂𝗈𝗋\n" +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content:
+                "You need to provide item, quantity, and target user ID!\n" +
+                "Use: adventure trade <item> <quantity> <target_userID>\n" +
+                "Example: adventure trade crystal_shard 2 123456",
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(
+            "You need to provide item, quantity, and target user ID!\n" +
+            "Use: adventure trade <item> <quantity> <target_userID>\n" +
+            "Example: adventure trade crystal_shard 2 123456"
+          );
+        }
       }
 
       const itemKey = args[1].toLowerCase();
       const quantity = parseInt(args[2]);
-      const targetName = args.slice(3).join("_");
+      const targetUserID = args[3];
 
       if (isNaN(quantity) || quantity <= 0) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖨𝗇𝗏𝖺𝗅𝗂𝖽 𝗊𝗎𝖺𝗇𝗍𝗂𝗍𝗒! 𝖬𝗎𝗌𝗍 𝖻𝖾 𝖺 𝗉𝗈𝗌𝗂𝗍𝗂𝗏𝖾 𝗇𝗎𝗆𝖻𝖾𝗋.\n` +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content: `Invalid quantity! Must be a positive number.`,
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(`Invalid quantity! Must be a positive number.`);
+        }
       }
 
       const userInventory = userData.adventure.inventory || {};
       if (!userInventory[itemKey] || userInventory[itemKey].quantity < quantity) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖸𝗈𝗎 𝖽𝗈𝗇'𝗍 𝗁𝖺𝗏𝖾 𝖾𝗇𝗈𝗎𝗀𝗁 ${itemKey.replace("_", " ")}!\n` +
-          "𝖢𝗁𝖾𝖼𝗄 𝗒𝗈𝗎𝗋 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n" +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content:
+                `You don't have enough ${itemKey.replace("_", " ")}!\n` +
+                "Check your inventory with: adventure inventory",
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(
+            `You don't have enough ${itemKey.replace("_", " ")}!\n` +
+            "Check your inventory with: adventure inventory"
+          );
+        }
       }
 
-      const targetUsers = await usersDB.queryItemAll(
-        { "value.adventure.name": { $regex: `^${targetName}$`, $options: "i" } },
-        "adventure",
-        "money"
-      );
-      const targetUserEntry = Object.entries(targetUsers).find(([_, data]) => data.adventure?.name?.toLowerCase() === targetName.toLowerCase());
-
-      if (!targetUserEntry) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖳𝖺𝗋𝗀𝖾𝗍 𝗎𝗌𝖾𝗋 ${targetName} 𝗇𝗈𝗍 𝖿𝗈𝗎𝗇𝖽 𝗈𝗋 𝗇𝗈𝗍 𝗋𝖾𝗀𝗂𝗌𝗍𝖾𝗋𝖾𝖽!\n` +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+      const targetUserData = await usersDB.getItem(targetUserID);
+      if (!targetUserData || !targetUserData.adventure?.name) {
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content: `Target user ${targetUserID} not found or not registered!`,
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(`Target user ${targetUserID} not found or not registered!`);
+        }
       }
-
-      const [targetUserID, targetUserData] = targetUserEntry;
 
       if (targetUserID === userID) {
-        return await output.reply(
-          "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-          `𝖸𝗈𝗎 𝖼𝖺𝗇'𝗍 𝗍𝗋𝖺𝖽𝖾 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎𝗋𝗌𝖾𝗅𝖿!\n` +
-          "━━━━━━━ ✕ ━━━━━━\n" +
-          "𝗗𝗲𝘃𝗲�_l𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-        );
+        try {
+          return await output.reply(
+            format({
+              title: "〘 🌍 〙 ADVENTURE",
+              titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+              titleFont: "double_struck",
+              contentFont: "fancy_italic",
+              content: `You can't trade with yourself!`,
+            })
+          );
+        } catch (e) {
+          console.error("Format error:", e);
+          return await output.reply(`You can't trade with yourself!`);
+        }
       }
 
       const newUserData: UserData = { ...userData };
@@ -331,64 +431,111 @@ const command: Command = {
       await usersDB.setItem(userID, newUserData);
       await usersDB.setItem(targetUserID, newTargetUserData);
 
-      return await output.reply(
-        "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        `**${userData.adventure.name} 𝗍𝗋𝖺𝖽𝖾𝖽!**\n` +
-        `𝗧𝗿𝗮𝗱𝗲𝗱: ${quantity} ${itemKey.replace("_", " ")} 𝗍𝗈 ${targetName}\n` +
-        `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n` +
-        `━━━━━━━ ✕ ━━━━━━\n` +
-        `𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`
-      );
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content:
+              `**${userData.adventure.name} traded!**\n` +
+              `Traded: ${quantity} ${itemKey.replace("_", " ")} to ${targetUserData.adventure.name} (ID: ${targetUserID})\n` +
+              `> Check inventory with: adventure inventory`,
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(
+          `**${userData.adventure.name} traded!**\n` +
+          `Traded: ${quantity} ${itemKey.replace("_", " ")} to ${targetUserData.adventure.name} (ID: ${targetUserID})\n` +
+          `> Check inventory with: adventure inventory`
+        );
+      }
     }
 
     if (!args[0]) {
-      let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-                    "➤ 𝔸𝕕𝕧𝕖𝕟𝕥𝕦𝕣𝕖\n━━━━━━━━━━━━━━━\n" +
-                    "𝘼𝙙𝙫𝙚𝙣𝙩𝙪𝙧𝙚 𝙕𝙤𝙣𝙚𝙨:\n━━━━━━━━━━━━━━━\n";
+      let content = "Adventure Zones:\n";
       zones.forEach((z) => {
         const lastAdventured = userData.adventure?.cooldowns?.[z.key]?.lastAdventured || 0;
         const timeLeft = lastAdventured + z.cooldown - Date.now();
         content += `🌍 『 ${z.name} 』\n`;
-        content += `𝗞𝗲𝘆: ${z.key}\n`;
-        content += `𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: ${z.description}\n`;
-        content += `𝗖𝗼𝗼𝗹𝗱𝗼𝘄𝗻: ${(z.cooldown / 3600000).toFixed(1)} 𝗁𝗈𝗎𝗿𝘀\n`;
-        content += `𝗦𝘁𝗮𝘁𝘂𝘀: ${timeLeft > 0 ? `On cooldown (${Math.ceil(timeLeft / 60000)} min)` : "𝖱𝖾𝖺𝖽𝗒"}\n`;
-        content += `━━━━━━━━━━━━━━━\n`;
+        content += `**Key**: ${z.key}\n`;
+        content += `**Description**: ${z.description}\n`;
+        content += `**Cooldown**: ${(z.cooldown / 3600000).toFixed(1)} hours\n`;
+        content += `**Status**: ${timeLeft > 0 ? `On cooldown (${Math.ceil(timeLeft / 60000)} min)` : "Ready"}\n\n`;
       });
-      content += `> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 <𝗓𝗈𝗇𝖾_𝗄𝖾𝗒> 𝗍𝗈 𝖾𝗑𝗉𝗅𝗈𝗋𝖾\n` +
-                 `*𝖤𝗑𝖺𝗆𝗉𝗅𝖾: #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒\n` +
-                 `*> 𝖴𝗌𝖾 #𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗅𝗶𝘀𝘁 𝗍𝗈 𝗌𝖾𝖾 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝗋𝗌\n` +
-                 `*> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒\n` +
-                 `*> 𝖳𝗋𝖺𝖽𝖾 𝗂𝗍𝖾𝗆𝗌 𝗐𝗂𝗍𝗁: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗋𝖺𝖽𝖾\n` +
-                 `━━━━━━━ ✕ ━━━━━━\n𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
+      content += `> Use #adventure <zone_key> to explore\n` +
+                 `*Example: #adventure shadow_valley\n` +
+                 `*> Use #adventure list to see adventurers\n` +
+                 `*> Check inventory with: adventure inventory\n` +
+                 `*> Trade items with: adventure trade`;
 
-      return await output.reply(content);
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content,
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(content);
+      }
     }
 
     const zoneKey = args[0].toLowerCase();
     const zone = zones.find((z) => z.key === zoneKey);
 
     if (!zone) {
-      return await output.reply(
-        "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        `𝖨𝗇𝗏𝖺𝗅𝗂𝖽 𝗓𝗈𝗇𝖾 𝗄𝖾𝗒!\n` +
-        "𝖴𝗌𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗍𝗈 𝗌𝖾𝖾 𝗓𝗈𝗇𝖾𝗌\n" +
-        "𝖤𝗑𝖺𝗆𝗉𝗅𝖾: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗌𝗁𝖺𝖽𝗈𝗐_𝗏𝖺𝗅𝗅𝖾𝗒\n" +
-        "━━━━━━━ ✕ ━━━━━━\n" +
-        "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-      );
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content:
+              `Invalid zone key!\n` +
+              "Use: adventure to see zones\n" +
+              "Example: adventure shadow_valley",
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(
+          `Invalid zone key!\n` +
+          "Use: adventure to see zones\n" +
+          "Example: adventure shadow_valley"
+        );
+      }
     }
 
     const lastAdventured = userData.adventure?.cooldowns?.[zoneKey]?.lastAdventured || 0;
     if (Date.now() < lastAdventured + zone.cooldown && !input.isAdmin) {
       const timeLeft = Math.ceil((lastAdventured + zone.cooldown - Date.now()) / 60000);
-      return await output.reply(
-        "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-        `**${userData.adventure.name} 𝗂𝗌 𝗈𝗇 𝖼𝗈𝗈𝗅𝖽𝗈𝗐𝗇!**\n` +
-        `𝖳𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗂𝗇 ${timeLeft} 𝗆𝗂𝗇𝗎𝗍𝖾𝗌.\n` +
-        "━━━━━━━ ✕ ━━━━━━\n" +
-        "𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy"
-      );
+      try {
+        return await output.reply(
+          format({
+            title: "〘 🌍 〙 ADVENTURE",
+            titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+            titleFont: "double_struck",
+            contentFont: "fancy_italic",
+            content:
+              `**${userData.adventure.name} is on cooldown!**\n` +
+              `Try again in ${timeLeft} minutes.`,
+          })
+        );
+      } catch (e) {
+        console.error("Format error:", e);
+        return await output.reply(
+          `**${userData.adventure.name} is on cooldown!**\n` +
+          `Try again in ${timeLeft} minutes.`
+        );
+      }
     }
 
     const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
@@ -407,17 +554,27 @@ const command: Command = {
 
     await usersDB.setItem(userID, newUserData);
 
-    let content = "〘 🌍 〙 **ADVENTURE**\n━━━━━━━━━━━━━━━\n" +
-                  `**𝖠𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾𝖽 𝗂𝗇 ${zone.name}!**\n` +
-                  `𝗘𝘃𝗲𝗻𝘁: ${outcome.description}\n`;
-    if (outcome.rewards.coins) content += `𝗘𝗮𝗿𝗻𝗲𝗱: ${outcome.rewards.coins} 𝖼𝗈𝗶𝗻𝘀\n`;
-    if (outcome.rewards.itemKey) content += `𝗙𝗼𝘂𝗻𝗱: ${outcome.rewards.quantity} ${outcome.rewards.itemKey.replace("_", " ")}\n`;
-    content += `> 𝖢𝗁𝖾𝖼𝗄 𝗂𝗇𝗏𝖾𝗇𝗍𝗈𝗋𝗒 𝗐𝗶𝘁𝗵: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝗶𝗻𝘃𝗲𝗻𝘁𝗼𝗿𝘆\n` +
-               `*> 𝖳𝗿𝗮𝗱𝗲 𝗶𝘁𝗲𝗺𝘀 𝘄𝗶𝘁𝗵: 𝖺𝖽𝗏𝖾𝗇𝗍𝗎𝗋𝖾 𝘁𝗿𝗮𝗱𝗲\n` +
-               `━━━━━━━ ✕ ━━━━━━\n` +
-               `𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗱 𝗯𝘆: Aljur Pogoy`;
+    let content = `**Adventured in ${zone.name}!**\n` +
+                  `**Event**: ${outcome.description}\n`;
+    if (outcome.rewards.coins) content += `**Earned**: ${outcome.rewards.coins} coins\n`;
+    if (outcome.rewards.itemKey) content += `**Found**: ${outcome.rewards.quantity} ${outcome.rewards.itemKey.replace("_", " ")}\n`;
+    content += `> Check inventory with: adventure inventory\n` +
+               `*> Trade items with: adventure trade`;
 
-    return await output.reply(content);
+    try {
+      return await output.reply(
+        format({
+          title: "〘 🌍 〙 ADVENT genealogical treeURE",
+          titlePattern: `{emojis} ${UNIRedux.arrow} {word}`,
+          titleFont: "double_struck",
+          contentFont: "fancy_italic",
+          content,
+        })
+      );
+    } catch (e) {
+      console.error("Format error:", e);
+      return await output.reply(content);
+    }
   },
 };
 
