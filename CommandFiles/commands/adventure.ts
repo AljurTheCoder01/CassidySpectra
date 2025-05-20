@@ -1,20 +1,5 @@
 import { UNISpectra } from "@cassidy/unispectra"
 
-interface Zone {
-  key: string;
-  name: string;
-  description: string;
-}
-
-interface Outcome {
-  type: string;
-  description: string;
-  rewards: {
-    coins?: number;
-    itemKey?: string;
-    quantity?: number;
-  };
-}
 
 const zones: Zone[] = [
   { key: "shadow_valley", name: "𝗦𝗵𝗮𝗱𝗼𝘄 𝗩𝗮𝗹𝗹𝗲𝘆", description: "𝖠 𝗆𝗂𝗌𝗍𝗒 𝗏𝖺𝗅𝗅𝖾𝗒 𝗐𝗂𝗍𝗁 𝗁𝗂𝖽𝖽𝖾𝗇 𝗋𝖾𝗅𝗂𝖼𝗌." },
@@ -41,72 +26,6 @@ const outcomes: Outcome[] = [
   { type: "riddle", description: "Solved a riddle to unlock a secret stash!", rewards: { coins: 180, itemKey: "silver_coin", quantity: 5 } },
 ];
 
-interface AdventureData {
-  name?: string;
-  inventory: Record<string, { quantity: number }>;
-}
-
-interface UserData {
-  money?: number;
-  name?: string;
-  adventure?: AdventureData;
-}
-
-interface UsersDB {
-  getItem: (userID: string) => Promise<UserData | null>;
-  setItem: (userID: string, data: UserData) => Promise<void>;
-  queryItemAll: (
-    query: Record<string, any>,
-    ...fields: string[]
-  ) => Promise<Record<string, UserData>>;
-}
-
-interface CommandContext {
-  output: {
-    reply: (message: string) => Promise<void>;
-    replyStyled: (message: string, style: CassidySpectra.CommandStyle) => Promise<void>;
-  };
-  input: {
-    sid: string;
-    isAdmin: boolean;
-  };
-  usersDB: UsersDB | null;
-  args: string[];
-}
-
-interface CassidySpectra {
-  CommandMeta: {
-    name: string;
-    otherNames: string[];
-    version: string;
-    author: string;
-    description: string;
-    category: string;
-    usage: string;
-  };
-  CommandStyle: {
-    title: {
-      content: string;
-      line_bottom: string;
-      text_font: string;
-    };
-    content: {
-      text_font: string;
-      line_bottom_inside_x: string;
-      content: null;
-    };
-    footer: {
-      content: string;
-      text_font: string;
-    };
-  };
-}
-
-interface Command {
-  meta: CassidySpectra.CommandMeta;
-  style: CassidySpectra.CommandStyle;
-  entry: (ctx: CommandContext) => Promise<void>;
-}
 
 const command: Command = {
   meta: {
@@ -121,7 +40,7 @@ const command: Command = {
   style: {
     title: {
       content: `${UNISpectra.charm} 𝔸𝔻𝕍𝔼ℕ𝕋𝕌ℝ𝔼 〘 🌍 〙`,
-      line_bottom: "━━━━━━━━━━━━━━━",
+      line_bottom: "default",
       text_font: "double_struck",
     },
     content: {
